@@ -6,6 +6,7 @@
     <title>Episodes - My Anime Streaming</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="anime.css">
+    \<script src="animeData.js"></script>
     <style>
         .episode-list { margin: 30px 0; }
         .episode-link { display: block; color: #ffd166; margin-bottom: 10px; cursor: pointer; }
@@ -81,51 +82,6 @@
     </footer>
     <script src="episodes.js"></script>
     <script>
-        // Save progress to localStorage
-        function addToMyList(animeId, animeName, animeImg, episodeNum) {
-            let myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
-            const existing = myList.find(a => a.id === animeId);
-            if (existing) {
-                // Only update if new episode is higher
-                if (!existing.episode || episodeNum > existing.episode) {
-                    existing.episode = episodeNum;
-                    localStorage.setItem('myAnimeList', JSON.stringify(myList));
-                }
-            } else {
-                myList.push({ id: animeId, name: animeName, img: animeImg, episode: episodeNum });
-                localStorage.setItem('myAnimeList', JSON.stringify(myList));
-            }
-        }
-
-        // Initialize myAnimeList in localStorage if not present
-        (function() {
-            let myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
-            myList.forEach(a => { if (!a.episode) a.episode = 1; }); // or set to 1 or any default
-            localStorage.setItem('myAnimeList', JSON.stringify(myList));
-        })();
-
-        // Example: Call this ONLY when the user actually starts watching an episode
-        // You should call this when the video player starts or when the user clicks play.
-        // Example usage:
-        // addToMyList('frieren', 'Frieren: Beyond Journey’s End', 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg', 2);
-
-        // Example: If you want to call it when the iframe loads (user sees the episode), you can do:
-        const animeId = /* get from your page logic */;
-        const animeName = /* get from your page logic */;
-        const animeImg = /* get from your page logic */;
-        const episodeNum = /* get from your page logic */;
-        const videoContainer = document.getElementById('video-container');
-        if (videoContainer) {
-            const observer = new MutationObserver(() => {
-                // Only add to list if an iframe is present (episode is being watched)
-                if (videoContainer.querySelector('iframe')) {
-                    addToMyList(animeId, animeName, animeImg, episodeNum);
-                    observer.disconnect();
-                }
-            });
-            observer.observe(videoContainer, { childList: true });
-        }
-
         // Language toggle and site language UI update
         const siteLangKey = 'siteLang';
         const siteLangToggle = document.getElementById('site-lang-toggle');

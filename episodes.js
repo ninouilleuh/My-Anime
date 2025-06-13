@@ -1,201 +1,6 @@
 // Dummy data for demonstration
-const animeData = {
-    frieren: {
-        title: "Frieren: Beyond Journey’s End",
-        seasons: [
-            {
-                title: "Season 1",
-                episodes: 28,
-                videos: [
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107257&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107259&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107260&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107261&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107877&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=108448&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=108870&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109054&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109177&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109338&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109526&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=110596&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=110599&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=112321&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=113203&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=113623&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=114697&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=115018&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=116998&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=117772&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=119410&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=119860&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=120034&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=120781&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=121529&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=121838&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=122211&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=122931&server=hd-1&type=sub"
-                ],
-                videosDub: [
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107257&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107259&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107260&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107261&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=107877&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=108448&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=108870&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109054&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109177&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109338&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=109526&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=110596&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=110599&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=112321&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=113203&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=113623&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=114697&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=115018&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=116998&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=117772&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=119410&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=119860&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=120034&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=120781&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=121529&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=121838&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=122211&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=frieren-beyond-journeys-end-18542&ep=122931&server=hd-1&type=dub"
-                ],
-                videosFrSub: [
-                  "1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18",
-                  "19",
-                  "20",
-                  "21",
-                  "22",
-                  "23",
-                  "24",
-                  "25",
-                  "26",
-                  "27",
-                  "28"
-                ],
-                videosFrDub: [
-                  "1",
-                  "2",
-                  "3",
-                  "4",
-                  "5",
-                  "6",
-                  "7",
-                  "8",
-                  "9",
-                  "10",
-                  "11",
-                  "12",
-                  "13",
-                  "14",
-                  "15",
-                  "16",
-                  "17",
-                  "18",
-                  "19",
-                  "20",
-                  "21",
-                  "22",
-                  "23",
-                  "24",
-                  "25",
-                  "26",
-                  "27",
-                  "28"
-                ]
-            }
-        ]
-    },
-    "solo-leveling": {
-        title: "Solo Leveling",
-        seasons: [
-            {
-                title: "Season 1",
-                episodes: 12,
-                videos: [
-                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=114721&server=hd-1&type=sub",
-                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=115276&server=hd-1&type=sub",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12"
-                ],
-                videosDub: [
-                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=114721&server=hd-1&type=dub",
-                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=115276&server=hd-1&type=dub",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12"
-                ],
-                videosFrSub: [
-                    "https://video.sibnet.ru/shell.php?videoid=5389406",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12"
-                ],
-                videosFrDub: [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12"
-                ]
-            }
-        ]
-    }
-    // Add more anime and seasons as needed
-};
+
+const animeList = window.animeData;
 
 function getParam(name) {
     const params = new URLSearchParams(window.location.search);
@@ -206,7 +11,7 @@ const animeId = getParam('id');
 const seasonNum = parseInt(getParam('season'), 10) || 1;
 const episodeNum = parseInt(getParam('episode'), 10) || 1;
 
-const anime = animeData[animeId];
+const anime = animeList.find(a => a.id === animeId);
 if (!anime || !anime.seasons[seasonNum - 1]) {
     document.querySelector('.container').innerHTML = "<p>Anime or season not found.</p>";
 } else {
@@ -270,6 +75,7 @@ if (!anime || !anime.seasons[seasonNum - 1]) {
         } else if (lang === 'frdub' && season.videosFrDub && season.videosFrDub[episodeNum - 1]) {
             videoUrl = season.videosFrDub[episodeNum - 1];
         } else {
+            const season = anime.seasons[seasonNum - 1];
             videoUrl = season.videos[episodeNum - 1]; // default to EN sub
         }
         const videoContainer = document.getElementById('video-container');
