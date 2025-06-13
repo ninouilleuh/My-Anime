@@ -215,7 +215,7 @@
         &copy; 2025 My Anime Streaming. All rights reserved.
     </footer>
     <script>
-        // List of anime names and their ids (add all anime you want searchable)
+        // List of anime names and their ids
         const animeList = window.animeData;
         const airingSoonList = animeList.filter(a => a.nextEpisodeDate);
 
@@ -337,7 +337,13 @@
                     return `
                         <div class="anime-card">
                             <a href="anime.html?id=${anime.id}">
-                                <img src="${anime.img}" alt="${anime.name}">
+                                ${anime.trailer
+    ? `<div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:12px;">
+      <iframe src="${anime.trailer}" frameborder="0" allowfullscreen
+        style="width:100%;height:100%;display:block;border-radius:12px;"></iframe>
+   </div>`
+    : `<img src="${anime.img}" alt="${anime.name}">`
+}
                             </a>
                             <div class="info">
                                 <div class="title"><a href="anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>

@@ -289,5 +289,81 @@ window.animeData = [
             }
         ],
         ongoing: false
+    },
+    {
+        id: "bleach",
+        name: "Bleach",
+        desc: "Ichigo Kurosaki becomes a Soul Reaper and must protect the living world from evil spirits and guide departed souls to the afterlife.",
+        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx269-d2GmRkJbMopq.png",
+        genres: ["action", "adventure", "supernatural"],
+        seasons: [
+            {
+                title: "Season 1 : The Substitute Soul Reaper",
+                episodes: 20,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 2 : The Entry",
+                episodes: 21,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 3 : The Rescue",
+                episodes: 22,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 4 : The Bount",
+                episodes: 28,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 5 : The Assault",
+                episodes: 18,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 6 : Arrancar : The Appearance",
+                episodes: 22,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 7 : The Arrancar Part 2 : The Hueco Mundo Sneak Entry",
+                episodes: 20,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 8 : The Arrancar Part 3 : The Fierce Fight",
+                episodes: 16,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            }
+        ],
+        ongoing: true,
+        nextEpisodeDate: "2026-06-01T00:00:00Z", // Placeholder date for next episode
+        trailer: "https://www.youtube.com/embed/HL3eTEn0KXE?si=cvWFrgbuuh_IvTuB"
     }
 ];
