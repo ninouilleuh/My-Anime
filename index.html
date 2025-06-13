@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Anime Streaming</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Popup suggestion styling */
+        .browse-bar-container {
+            position: relative;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #browse-suggestion {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 44px;
+            z-index: 100;
+            min-width: 260px;
+            background: #23233a;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            padding: 8px 0;
+            display: none;
+        }
+        #browse-suggestion.active {
+            display: block;
+        }
+        #browse-suggestion a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #ffd166;
+            min-width: 220px;
+            transition: background 0.15s;
+        }
+        #browse-suggestion a:hover {
+            background: #181824;
+        }
+        #browse-suggestion img {
+            width: 48px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        /* Dropdown styling */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            background: #23233a;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            min-width: 160px;
+            z-index: 200;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 10px 18px;
+            color: #ffd166;
+            text-decoration: none;
+        }
+        .dropdown-content a:hover {
+            background: #181824;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Anime Streaming</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="browse.html">Browse</a>
+            <div class="dropdown" style="display:inline-block;position:relative;">
+                <a href="#" id="genres-link">Genres ▼</a>
+                <div id="genres-dropdown" class="dropdown-content" style="display:none;position:absolute;left:0;top:100%;background:#23233a;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.18);min-width:160px;z-index:200;">
+                    <a href="browse.html?genre=action">Action</a>
+                    <a href="browse.html?genre=adventure">Adventure</a>
+                    <a href="browse.html?genre=fantasy">Fantasy</a>
+                    <a href="browse.html?genre=drama">Drama</a>
+                    <a href="browse.html?genre=sci-fi">Sci-Fi</a>
+                    <a href="browse.html?genre=mystery">Mystery</a>
+                    <a href="browse.html?genre=supernatural">Supernatural</a>
+                </div>
+            </div>
+        </nav>
+        <div class="browse-bar-container">
+            <input type="text" id="browse-bar" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
+            <div id="browse-suggestion"></div>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Popular Anime</h2>
+        <div class="anime-grid">
+            <div class="anime-card">
+                <a href="anime.html?id=frieren">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="anime.html?id=frieren" style="color:inherit;text-decoration:none;">Frieren: Beyond Journey’s End</a></div>
+                    <div class="desc">An elven mage reflects on her life after her party’s quest is over, seeking new meaning in a changing world.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <a href="anime.html?id=solo-leveling">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png" alt="Solo Leveling">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="anime.html?id=solo-leveling" style="color:inherit;text-decoration:none;">Solo Leveling</a></div>
+                    <div class="desc">A weak hunter gains the power to level up and becomes humanity’s greatest hope against monsters.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <a href="anime.html?id=sword-art-online">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx11757-SxYDUzdr9rh2.jpg" alt="Sword Art Online">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="anime.html?id=sword-art-online" style="color:inherit;text-decoration:none;">Sword Art Online</a></div>
+                    <div class="desc">Players are trapped in a virtual MMORPG where dying in-game means dying in real life.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <a href="anime.html?id=fullmetal-alchemist">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5114-nSWCgQlmOMtj.jpg" alt="Fullmetal Alchemist: Brotherhood">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="anime.html?id=fullmetal-alchemist" style="color:inherit;text-decoration:none;">Fullmetal Alchemist: Brotherhood</a></div>
+                    <div class="desc">Two brothers use alchemy in their quest to restore their bodies after a failed ritual.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <a href="anime.html?id=death-note">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1535-kUgkcrfOrkUM.jpg" alt="Death Note">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="anime.html?id=death-note" style="color:inherit;text-decoration:none;">Death Note</a></div>
+                    <div class="desc">A high school student discovers a notebook with deadly powers and seeks to change the world.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Recently Added</h2>
+        <div class="anime-grid">
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End">
+                <div class="info">
+                    <div class="title">Frieren: Beyond Journey’s End</div>
+                    <div class="desc">An elven mage reflects on her life after her party’s quest is over, seeking new meaning in a changing world.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png" alt="Solo Leveling">
+                <div class="info">
+                    <div class="title">Solo Leveling</div>
+                    <div class="desc">A weak hunter gains the power to level up and becomes humanity’s greatest hope against monsters.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg" alt="Demon Slayer: Hashira Training Arc">
+                <div class="info">
+                    <div class="title">Demon Slayer: Hashira Training Arc</div>
+                    <div class="desc">Tanjiro and friends undergo intense training with the Hashira to prepare for the final battle.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153288-25FBfFJzEQ5O.jpg" alt="Kaiju No. 8">
+                <div class="info">
+                    <div class="title">Kaiju No. 8</div>
+                    <div class="desc">A man who can transform into a kaiju joins the Defense Force to fight monsters threatening Japan.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Last Episodes Added</h2>
+        <div class="anime-grid">
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End Episode 24">
+                <div class="info">
+                    <div class="title">Frieren: Beyond Journey’s End - Episode 24</div>
+                    <div class="desc">Frieren faces a powerful new foe as her journey continues.</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg" alt="Demon Slayer: Hashira Training Arc Episode 8">
+                <div class="info">
+                    <div class="title">Demon Slayer: Hashira Training Arc - Episode 8</div>
+                    <div class="desc">The Hashira complete their training and prepare for the final confrontation</div>
+                </div>
+            </div>
+            <div class="anime-card">
+                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png" alt="Solo Leveling Episode 12">
+                <div class="info">
+                    <div class="title">Solo Leveling - Episode 12</div>
+                    <div class="desc">Jinwoo faces his toughest dungeon yet as new threats emerge.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; 2025 My Anime Streaming. All rights reserved.
+    </footer>
+    <script>
+        // List of anime names and their ids (add all anime you want searchable)
+        const animeList = [
+            { id: "frieren", name: "Frieren: Beyond Journey’s End", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" },
+            { id: "solo-leveling", name: "Solo Leveling", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png" },
+            { id: "sword-art-online", name: "Sword Art Online", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx11757-SxYDUzdr9rh2.jpg" },
+            { id: "fullmetal-alchemist", name: "Fullmetal Alchemist: Brotherhood", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5114-nSWCgQlmOMtj.jpg" },
+            { id: "death-note", name: "Death Note", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1535-kUgkcrfOrkUM.jpg" },
+            { id: "demon-slayer", name: "Demon Slayer: Hashira Training Arc", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg" },
+            { id: "kaiju-no-8", name: "Kaiju No. 8", img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153288-25FBfFJzEQ5O.jpg" }
+        ];
+
+        function findClosestAnime(query) {
+            query = query.trim().toLowerCase();
+            if (!query) return null;
+            // Simple closest match: find anime with name that includes the query, or closest by Levenshtein distance
+            let best = null, bestScore = Infinity;
+            for (const anime of animeList) {
+                const name = anime.name.toLowerCase();
+                if (name.includes(query)) return anime;
+                // Levenshtein distance for fuzzy match
+                let score = levenshtein(query, name);
+                if (score < bestScore) {
+                    bestScore = score;
+                    best = anime;
+                }
+            }
+            return bestScore <= 5 ? best : null; // Only suggest if reasonably close
+        }
+
+        function findClosestAnimeList(query) {
+            query = query.trim().toLowerCase();
+            if (!query) return [];
+            // Only return anime whose names start with the query
+            let matches = animeList.filter(anime => anime.name.toLowerCase().startsWith(query));
+            if (matches.length > 0) return matches;
+            // Fuzzy match: sort by Levenshtein distance
+            let scored = animeList.map(anime => ({
+                ...anime,
+                score: levenshtein(query, anime.name.toLowerCase())
+            }));
+            scored.sort((a, b) => a.score - b.score);
+            return scored.slice(0, 3).filter(anime => anime.score <= 5);
+        }
+
+        // Levenshtein distance function
+        function levenshtein(a, b) {
+            const matrix = [];
+            for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        const browseBar = document.getElementById('browse-bar');
+        const suggestionDiv = document.getElementById('browse-suggestion');
+        browseBar.addEventListener('input', function() {
+            const query = this.value;
+            const matches = findClosestAnimeList(query);
+            if (matches.length > 0) {
+                suggestionDiv.innerHTML = matches.map(anime => `
+                    <a href="anime.html?id=${anime.id}">
+                        <img src="${anime.img}" alt="${anime.name}">
+                        <span style="font-weight:bold;">${anime.name}</span>
+                    </a>
+                `).join('');
+                suggestionDiv.classList.add('active');
+            } else if (query) {
+                suggestionDiv.innerHTML = `<div style="padding:10px 0;color:#ffd166;">No match found.</div>`;
+                suggestionDiv.classList.add('active');
+            } else {
+                suggestionDiv.innerHTML = '';
+                suggestionDiv.classList.remove('active');
+            }
+        });
+
+        // Hide popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!browseBar.contains(e.target) && !suggestionDiv.contains(e.target)) {
+                suggestionDiv.classList.remove('active');
+            }
+        });
+        browseBar.addEventListener('focus', function() {
+            if (suggestionDiv.innerHTML.trim()) suggestionDiv.classList.add('active');
+        });
+
+        // Dropdown for genres
+        const genresLink = document.getElementById('genres-link');
+        const genresDropdown = document.getElementById('genres-dropdown');
+        genresLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            genresDropdown.style.display = genresDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!genresLink.contains(e.target) && !genresDropdown.contains(e.target)) {
+                genresDropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+.anime-details {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    background: #23233a;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 32px;
+}
+.anime-details img {
+    width: 260px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+.anime-info {
+    flex: 1;
+}
+.anime-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+.anime-desc {
+    font-size: 1.1rem;
+    color: #bdbdbd;
+    margin-bottom: 18px;
+}
+.seasons-list {
+    margin-bottom: 24px;
+}
+.season {
+    background: #181824;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+}
+.season-title {
+    font-weight: 700;
+    color: #ffd166;
+}
+.timer {
+    background: #181824;
+    color: #ff6f61;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-top: 12px;
+}
+a.back-link {
+    color: #ff6f61;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+a.back-link:hover {
+    color: #ffd166;
+}

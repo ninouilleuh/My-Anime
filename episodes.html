@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episodes - My Anime Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="anime.css">
+    <style>
+        .episode-list { margin: 30px 0; }
+        .episode-link { display: block; color: #ffd166; margin-bottom: 10px; cursor: pointer; }
+        .episode-link.selected { color: #ff6f61; font-weight: bold; }
+        .video-container { margin-top: 30px; }
+        iframe { width: 100%; height: 400px; border: none; border-radius: 12px; background: #000; }
+        .episode-dropdown {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .lang-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .lang-radio {
+            display: none;
+        }
+        .lang-label {
+            padding: 7px 28px;
+            border-radius: 20px;
+            background: #23233a;
+            color: #ffd166;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+            user-select: none;
+        }
+        .lang-radio:checked + .lang-label {
+            background: #ffd166;
+            color: #23233a;
+            border: 2px solid #ffd166;
+        }
+        .lang-label:hover {
+            background: #35355a;
+            color: #fffbe6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Anime Streaming</h1>
+        <button id="site-lang-toggle" style="margin-left:20px;padding:6px 18px;border-radius:8px;background:#23233a;color:#ffd166;font-weight:bold;border:2px solid #ffd166;cursor:pointer;">
+            Français
+        </button>
+    </header>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Back to Home</a>
+        <div id="anime-title" class="anime-title"></div>
+        <div id="season-title" class="season-title"></div>
+        <!-- Add this where you want the toggle to appear -->
+        <div class="lang-toggle">
+            <input type="radio" name="lang" value="sub" id="lang-sub" class="lang-radio lang-en" checked hidden>
+            <label for="lang-sub" class="lang-label lang-en">EN Sub</label>
+            <input type="radio" name="lang" value="dub" id="lang-dub" class="lang-radio lang-en" hidden>
+            <label for="lang-dub" class="lang-label lang-en">EN Dub</label>
+            <input type="radio" name="lang" value="frsub" id="lang-frsub" class="lang-radio lang-fr" hidden>
+            <label for="lang-frsub" class="lang-label lang-fr">Vostfr</label>
+            <input type="radio" name="lang" value="frdub" id="lang-frdub" class="lang-radio lang-fr" hidden>
+            <label for="lang-frdub" class="lang-label lang-fr">FR</label>
+        </div>
+        <div class="episode-list" id="episode-list"></div>
+        <div class="video-container" id="video-container"></div>
+    </div>
+    <footer>
+        &copy; 2025 My Anime Streaming. All rights reserved.
+    </footer>
+    <script src="episodes.js"></script>
+    <script>
+        // Save progress to localStorage
+        function addToMyList(animeId, animeName, animeImg, episodeNum) {
+            let myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
+            const existing = myList.find(a => a.id === animeId);
+            if (existing) {
+                // Only update if new episode is higher
+                if (!existing.episode || episodeNum > existing.episode) {
+                    existing.episode = episodeNum;
+                    localStorage.setItem('myAnimeList', JSON.stringify(myList));
+                }
+            } else {
+                myList.push({ id: animeId, name: animeName, img: animeImg, episode: episodeNum });
+                localStorage.setItem('myAnimeList', JSON.stringify(myList));
+            }
+        }
+
+        // Initialize myAnimeList in localStorage if not present
+        (function() {
+            let myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
+            myList.forEach(a => { if (!a.episode) a.episode = 1; }); // or set to 1 or any default
+            localStorage.setItem('myAnimeList', JSON.stringify(myList));
+        })();
+
+        // Example: Call this ONLY when the user actually starts watching an episode
+        // You should call this when the video player starts or when the user clicks play.
+        // Example usage:
+        // addToMyList('frieren', 'Frieren: Beyond Journey’s End', 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg', 2);
+
+        // Example: If you want to call it when the iframe loads (user sees the episode), you can do:
+        const animeId = /* get from your page logic */;
+        const animeName = /* get from your page logic */;
+        const animeImg = /* get from your page logic */;
+        const episodeNum = /* get from your page logic */;
+        const videoContainer = document.getElementById('video-container');
+        if (videoContainer) {
+            const observer = new MutationObserver(() => {
+                // Only add to list if an iframe is present (episode is being watched)
+                if (videoContainer.querySelector('iframe')) {
+                    addToMyList(animeId, animeName, animeImg, episodeNum);
+                    observer.disconnect();
+                }
+            });
+            observer.observe(videoContainer, { childList: true });
+        }
+
+        // Language toggle and site language UI update
+        const siteLangKey = 'siteLang';
+        const siteLangToggle = document.getElementById('site-lang-toggle');
+
+        function updateSiteLangUI() {
+            const lang = localStorage.getItem(siteLangKey) || 'en';
+            siteLangToggle.textContent = lang === 'fr' ? 'English' : 'Français';
+            document.documentElement.lang = lang;
+
+            // Translate static text
+            const backLink = document.querySelector('.back-link');
+            if (backLink) {
+                backLink.textContent = lang === 'fr' ? '← Retour à l’accueil' : '← Back to Home';
+            }
+
+            // Show/hide language buttons
+            document.querySelectorAll('.lang-en').forEach(el => {
+                el.style.display = lang === 'fr' ? 'none' : '';
+            });
+            document.querySelectorAll('.lang-fr').forEach(el => {
+                el.style.display = lang === 'fr' ? '' : 'none';
+            });
+
+            // If switching to French and EN lang is selected, switch to FR sub by default
+            if (lang === 'fr') {
+                const frRadio = document.getElementById('lang-frsub');
+                if (frRadio && !frRadio.checked && document.querySelector('.lang-radio.lang-en:checked')) {
+                    frRadio.checked = true;
+                    if (typeof showVideo === 'function') showVideo();
+                }
+            }
+            // If switching to English and FR lang is selected, switch to EN sub by default
+            if (lang === 'en') {
+                const enRadio = document.getElementById('lang-sub');
+                if (enRadio && !enRadio.checked && document.querySelector('.lang-radio.lang-fr:checked')) {
+                    enRadio.checked = true;
+                    if (typeof showVideo === 'function') showVideo();
+                }
+            }
+        }
+        updateSiteLangUI();
+
+        siteLangToggle.addEventListener('click', () => {
+            const current = localStorage.getItem(siteLangKey) || 'en';
+            const next = current === 'en' ? 'fr' : 'en';
+            localStorage.setItem(siteLangKey, next);
+            updateSiteLangUI();
+        });
+    </script>
+</body>
+</html>

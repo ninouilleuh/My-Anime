@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My List - My Anime Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .anime-grid { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 30px; }
+        .anime-card { background: #23233a; border-radius: 10px; padding: 12px; width: 180px; text-align: center; }
+        .anime-card img { width: 100%; border-radius: 8px; }
+        .anime-card .title { font-weight: bold; margin: 10px 0 5px 0; color: #ffd166; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My List</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="browse.html">Browse</a>
+            <a href="my-list.html" style="color:#ffd166;">My List</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Your Anime</h2>
+        <div class="anime-grid" id="my-list-grid"></div>
+    </div>
+    <script>
+        // Load and display user's list
+        const myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
+        const grid = document.getElementById('my-list-grid');
+        if (myList.length === 0) {
+            grid.innerHTML = "<p style='color:#ffd166;'>You haven't started any anime yet.</p>";
+        } else {
+            grid.innerHTML = myList.map(anime => {
+                const ep = anime.episode || 1;
+                return `
+                    <div class="anime-card">
+                        <a href="episodes.html?id=${anime.id}&episode=${ep}">
+                            <img src="${anime.img}" alt="${anime.name}">
+                            <div class="title">${anime.name}</div>
+                            <div style="color:#fff;font-size:0.95em;">Last watched: Episode ${ep}</div>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
