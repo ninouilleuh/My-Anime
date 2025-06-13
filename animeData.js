@@ -133,7 +133,8 @@ window.animeData = [
             { title: "Season 2", episodes: 0, airing: true, nextEpisodeDate: "2026-01-01T00:00:00Z" }
         ],
         ongoing: true,
-        nextEpisodeDate: "2026-01-01T00:00:00Z"
+        nextEpisodeDate: "2026-01-01T00:00:00Z",
+        trailer: "https://www.youtube.com/embed/DknvOzqQCTo?si=eV9d9WwdBcbLZL-j"
     },
     {
         id: "solo-leveling",
@@ -365,5 +366,33 @@ window.animeData = [
         ongoing: true,
         nextEpisodeDate: "2026-06-01T00:00:00Z", // Placeholder date for next episode
         trailer: "https://www.youtube.com/embed/HL3eTEn0KXE?si=cvWFrgbuuh_IvTuB"
+    },
+    {
+        id: "rezero",
+        name: "Re:Zero − Starting Life in Another World",
+        desc: "Natsuki Subaru, an ordinary high school student, is transported to another world on his way home from the convenience store. He quickly discovers that he has the ability to return from death, rewinding time whenever he dies. With this power, Subaru tries to protect his friends and unravel the mysteries of this new world.",
+        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21355-6zQ2eP7JrN5w.jpg",
+        genres: ["fantasy", "drama", "psychological", "thriller"],
+        seasons: [
+            {
+                title: "Season 1",
+                episodes: 25,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            },
+            {
+                title: "Season 2",
+                episodes: 25,
+                videos: [],        // Add episode links here
+                videosDub: [],     // Add dub links here
+                videosFrSub: [],   // Add French sub links here
+                videosFrDub: []    // Add French dub links here
+            }
+        ],
+        ongoing: true,
+        nextEpisodeDate: "2026-01-01T00:00:00Z", // Placeholder date for next episode
+        trailer: "https://www.youtube.com/embed/01nLOU3J_Uo?si=NHVofdegBSstCcp3"
     }
 ];
