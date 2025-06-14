@@ -130,49 +130,49 @@ window.animeData = [
                 'https://Smoothpre.com/embed/2xuux0f9rzar'
                 ]
             },
-            { title: "Season 2", episodes: 0, airing: true, nextEpisodeDate: "2026-01-01T00:00:00Z" }
+            { title: "Season 2", episodes: 0}
         ],
         ongoing: true,
         nextEpisodeDate: "2026-01-01T00:00:00Z",
         trailer: "https://www.youtube.com/embed/DknvOzqQCTo?si=eV9d9WwdBcbLZL-j"
     },
-    {
+    { //season 2 missing
         id: "solo-leveling",
         name: "Solo Leveling",
-        desc: "",
+        desc: "They say whatever doesn’t kill you makes you stronger, but that’s not the case for the world’s weakest hunter Seong Jin-U. After being brutally slaughtered by monsters in a high-ranking dungeon, Jin-U came back with the System, a program only he could see, that’s leveling him up in every way. Now, he’s inspired to discover the secrets behind his powers and the dungeon that spawned them.",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png",
         genres: ["action", "fantasy", "adventure"],
         seasons: [
             {   
                 title: "Season 1",
                 episodes: 12,
-                videos: [ //missing
+                videos: [ 
                     "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=114721&server=hd-1&type=sub",
                     "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=115276&server=hd-1&type=sub",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12"
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=117058&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=118891&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=119497&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=119893&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=120094&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=121547&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=121874&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=122254&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=122950&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=123078&server=hd-1&type=sub"
                 ],
-                videosDub: [ //missing
+                videosDub: [ 
                         "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=114721&server=hd-1&type=dub",
                         "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=115276&server=hd-1&type=dub",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9",
-                        "10",
-                        "11",
-                        "12"
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=117058&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=118891&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=119497&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=119893&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=120094&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=121547&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=121874&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=122254&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=122950&server=hd-1&type=dub",
+                        "https://gogoanime.com.by/streaming.php?id=solo-leveling-18718&ep=123078&server=hd-1&type=dub"
                 ],
                 videosFrSub: [
                     'https://video.sibnet.ru/shell.php?videoid=5389406',
@@ -203,36 +203,90 @@ window.animeData = [
                     'https://video.sibnet.ru/shell.php?videoid=5504016',
                     'https://video.sibnet.ru/shell.php?videoid=5511308',
                 ]
-            }
+            },
+            { title: "Season 2", episodes: 0 }
         ],
         ongoing: false
     },
-    {
+    { //missing season 2, 3 part 1,2,3
         id: "sword-art-online",
         name: "Sword Art Online",
+        desc: "In the near future, a Virtual Reality Massive Multiplayer Online Role-Playing Game (VRMMORPG) called Sword Art Online has been released where players control their avatars with their bodies using a piece of technology called Nerve Gear. One day, players discover they cannot log out, as the game creator is holding them captive unless they reach the 100th floor of the game's tower and defeat the final boss. However, if they die in the game, they die in real life. Their struggle for survival starts now...",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx11757-SxYDUzdr9rh2.jpg",
         genres: ["action", "adventure", "fantasy", "sci-fi"],
         seasons: [
             {
-                title: "Season 1",
-                episodes: 0,
-                videos: [], //missing
+                title: "Season 1 (part 1) : Aincrad",
+                episodes: 14,
+                videos: [
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26565&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26566&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26567&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26568&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26569&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26570&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26571&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26572&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26573&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26574&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26575&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26576&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26577&server=hd-1&type=sub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26578&server=hd-1&type=sub"
+                ], 
+                videosDub: [
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26565&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26566&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26567&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26568&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26569&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26570&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26571&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26572&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26573&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26574&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26575&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26576&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26577&server=hd-1&type=dub",
+                    "https://gogoanime.com.by/streaming.php?id=sword-art-online-2274&ep=26578&server=hd-1&type=dub"
+                ],
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 1 (part 2) : Fairy Dance",
+                episodes: 10, //15-25
+                videos: [
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19",
+                    "20",
+                    "21",
+                    "22",
+                    "23",
+                    "24",
+                    "25"
+                ], //missing
                 videosDub: [], //missing
                 videosFrSub: [], //missing
                 videosFrDub: [] //missing
-            }
+            },
+
         ],
         ongoing: false
     },
-    {
+    { //season 1 51 episodes
         id: "fullmetal-alchemist",
         name: "Fullmetal Alchemist: Brotherhood",
+        desc: "",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5114-nSWCgQlmOMtj.jpg",
         genres: ["action", "adventure", "fantasy", "drama"],
         seasons: [
             {
                 title: "Season 1",
-                episodes: 0,
+                episodes: 51,
                 videos: [], //missing
                 videosDub: [], //missing
                 videosFrSub: [], //missing
@@ -241,15 +295,16 @@ window.animeData = [
         ],
         ongoing: false
     },
-    {
+    { //season 1 37 episodes
         id: "death-note",
         name: "Death Note",
+        desc: "Light Yagami is a genius high school student who is about to learn about life through a book of death. When a bored shinigami, a God of Death, named Ryuk drops a black notepad called a Death Note, Light receives power over life and death with the stroke of a pen. Determined to use this dark gift for the best, Light sets out to rid the world of evil… namely, the people he believes to be evil. Should anyone hold such power? The consequences of Light’s actions will set the world ablaze.",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1535-kUgkcrfOrkUM.jpg",
         genres: ["drama", "mystery", "supernatural"],
         seasons: [
             {
                 title: "Season 1",
-                episodes: 0,
+                episodes: 37,
                 videos: [], //missing
                 videosDub: [], //missing
                 videosFrSub: [], //missing
@@ -258,44 +313,94 @@ window.animeData = [
         ],
         ongoing: false
     },
-    {
+    { //season 1 : 26 episodes, season 2 : 7 episodes, season 3 : 11 episodes, season 4 : 11 episodes, season 5 : 8 episodes
         id: "demon-slayer",
-        name: "Demon Slayer: Hashira Training Arc",
+        name: "Demon Slayer",
+        desc: "It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon. To make matters worse, his younger sister Nezuko, the sole survivor, has been transformed into a demon herself. Though devastated by this grim reality, Tanjiro resolves to become a “demon slayer” so that he can turn his sister back into a human, and kill the demon that massacred his family.",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg",
         genres: ["action", "adventure", "fantasy"],
         seasons: [
             {
                 title: "Season 1",
-                episodes: 0,
+                episodes: 26,
+                videos: [], //missing
+                videosDub: [], //missing
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 2 : Mugen Train",
+                episodes: 7,
+                videos: [], //missing
+                videosDub: [], //missing
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 3 : Entertainment District",
+                episodes: 11,
+                videos: [], //missing
+                videosDub: [], //missing
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 4 : Swordsmith Village",
+                episodes: 11,
+                videos: [], //missing
+                videosDub: [], //missing
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 5 : Hashira Training",
+                episodes: 8,
+                videos: [], //missing
+                videosDub: [], //missing
+                videosFrSub: [], //missing
+                videosFrDub: [] //missing
+            },
+            {
+                title: "Season 6 : Infinity Castle",
+                episodes: 0, 
                 videos: [], //missing
                 videosDub: [], //missing
                 videosFrSub: [], //missing
                 videosFrDub: [] //missing
             }
         ],
-        ongoing: false
+        ongoing: true,
+        nextEpisodeDate: "2025-07-18T00:00:00Z", // Placeholder date for next episode
+        trailer: "https://www.youtube.com/embed/Ss0gxiuCPKE"
     },
-    {
+    { //season 1 : 12 episodes 
         id: "kaiju-no-8",
         name: "Kaiju No. 8",
+        desc: "",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153288-25FBfFJzEQ5O.jpg",
         genres: ["action", "sci-fi"],
         seasons: [
             {
                 title: "Season 1",
-                episodes: 0,
+                episodes: 12,
                 videos: [], //missing
                 videosDub: [], //missing
                 videosFrSub: [], //missing
                 videosFrDub: [] //missing
+            },
+            {
+                title: "Season 2",
+                episodes: 0 // Placeholder for future seasons
             }
         ],
-        ongoing: false
+        ongoing: true,
+        nextEpisodeDate: "2025-07-19T00:00:00Z",
+        trailer: "https://www.youtube.com/embed/zhXaZ4pL8gQ"
     },
     {
         id: "bleach",
         name: "Bleach",
-        desc: "Ichigo Kurosaki becomes a Soul Reaper and must protect the living world from evil spirits and guide departed souls to the afterlife.",
+        desc: "",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx269-d2GmRkJbMopq.png",
         genres: ["action", "adventure", "supernatural"],
         seasons: [
@@ -371,8 +476,8 @@ window.animeData = [
     {
         id: "rezero",
         name: "Re:Zero − Starting Life in Another World",
-        desc: "Natsuki Subaru, an ordinary high school student, is transported to another world on his way home from the convenience store. He quickly discovers that he has the ability to return from death, rewinding time whenever he dies. With this power, Subaru tries to protect his friends and unravel the mysteries of this new world.",
-        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21355-6zQ2eP7JrN5w.jpg",
+        desc: "",
+        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21355-wRVUrGxpvIQQ.jpg",
         genres: ["fantasy", "drama", "psychological", "thriller"],
         seasons: [
             {
