@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Anime - My Anime Streaming</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <style>
         .browse-bar-container {
             position: relative;
@@ -82,7 +82,7 @@
     <header>
         <h1>My Anime Streaming</h1>
         <nav>
-            <a href="index.html">Home</a>
+            <a href="../index.html">Home</a>
             <a href="browse.html" style="color:#ffd166;">Browse</a>
             <div class="dropdown">
                 <a href="#" id="genres-link">Genres ▼</a>
@@ -119,7 +119,7 @@
     <footer>
         &copy; 2025 My Anime Streaming. All rights reserved.
     </footer>
-    <script src="animeData.js"></script>
+    <script src="../js/animeData.js"></script>
     <script>
         // Anime list with genres
         const animeList = window.animeData;
@@ -129,11 +129,11 @@
             const grid = document.getElementById('anime-grid');
             grid.innerHTML = list.map(anime => `
                 <div class="anime-card">
-                    <a href="anime.html?id=${anime.id}">
+                    <a href="../pages/anime.html?id=${anime.id}">
                         <img src="${anime.img}" alt="${anime.name}">
                     </a>
                     <div class="info">
-                        <div class="title"><a href="anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
+                        <div class="title"><a href="../pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
                     </div>
                 </div>
             `).join('');
@@ -223,7 +223,7 @@
             if (query) {
                 if (filtered.length > 0) {
                     suggestionDiv.innerHTML = filtered.map(anime => `
-                        <a href="anime.html?id=${anime.id}">
+                        <a href="../pages/anime.html?id=${anime.id}">
                             <img src="${anime.img}" alt="${anime.name}">
                             <span style="font-weight:bold;">${anime.name}</span>
                         </a>

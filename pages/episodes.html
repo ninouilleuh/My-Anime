@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Episodes - My Anime Streaming</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="anime.css">
-    <script src="animeData.js"></script>
+    <title>Episodes - AnimeRashii</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/anime.css">
+    <script src="../js/animeData.js"></script>
     <style>
         .episode-list { margin: 30px 0; }
         .episode-link { display: block; color: #ffd166; margin-bottom: 10px; cursor: pointer; }
@@ -54,13 +54,13 @@
 </head>
 <body>
     <header>
-        <h1>My Anime Streaming</h1>
+        <h1>AnimeRashii</h1>
         <button id="site-lang-toggle" style="margin-left:20px;padding:6px 18px;border-radius:8px;background:#23233a;color:#ffd166;font-weight:bold;border:2px solid #ffd166;cursor:pointer;">
             Français
         </button>
     </header>
     <div class="container">
-        <a href="index.html" class="back-link">&larr; Back to Home</a>
+        <a href="../index.html" class="back-link">&larr; Back to Home</a>
         <div id="anime-title" class="anime-title"></div>
         <div id="season-title" class="season-title"></div>
         <!-- Add this where you want the toggle to appear -->
@@ -78,9 +78,9 @@
         <div class="video-container" id="video-container"></div>
     </div>
     <footer>
-        &copy; 2025 My Anime Streaming. All rights reserved.
+        &copy; 2025 AnimeRashii. All rights reserved.
     </footer>
-    <script src="episodes.js"></script>
+    <script src="../js/episodes.js"></script>
     <script>
         // Language toggle and site language UI update
         const siteLangKey = 'siteLang';

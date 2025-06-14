@@ -1,0 +1,215 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #181824;
+    color: #fff;
+}
+header {
+    background: #23233a;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+}
+nav {
+    margin-top: 10px;
+}
+nav a {
+    color: #ff6f61;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+nav a:hover {
+    color: #ffd166;
+}
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+}
+.anime-card {
+    background: #23233a;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+.anime-card:hover {
+    transform: translateY(-5px) scale(1.03);
+}
+.anime-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+}
+.anime-card .info {
+    padding: 15px;
+}
+.anime-card .title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.anime-card .desc {
+    font-size: 0.95rem;
+    color: #bdbdbd;
+}
+footer {
+    background: #23233a;
+    text-align: center;
+    padding: 18px 0;
+    margin-top: 40px;
+    color: #bdbdbd;
+    font-size: 0.95rem;
+}
+
+/* Carousel container styling */
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+/* Carousel navigation buttons */
+.carousel-btn {
+    font-size: 2.2rem;
+    padding: 0 18px;
+    border: none;
+    background: none;
+    color: #ffd166;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.carousel-btn:hover {
+    background: #23233a;
+    color: #fff;
+}
+.carousel-viewport {
+    width: 1016px; /* 3 * 320px + 2 * 28px */
+    max-width: 100vw;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+#airing-soon-grid.anime-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 28px;
+    transition: transform 0.6s cubic-bezier(.4,1.4,.6,1);
+    will-change: transform;
+}
+#airing-soon-grid .anime-card {
+    flex: 0 0 320px;
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
+    min-height: 380px;
+    max-height: 400px;
+    height: 400px;
+    box-sizing: border-box;
+    padding: 18px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #23233a;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    transition: transform 0.18s;
+}
+#airing-soon-grid .anime-card:hover {
+    transform: translateY(-6px) scale(1.03);
+}
+#airing-soon-grid .trailer-frame-wrapper {
+    width: 100%;
+    max-width: 284px;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #181824;
+    flex-shrink: 0;
+}
+#airing-soon-grid .trailer-frame-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    display: block;
+    object-fit: cover;
+}
+#airing-soon-grid .info {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 14px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+#airing-soon-grid .title {
+    font-size: 1.18rem;
+    margin: 12px 0 6px 0;
+    width: 100%;
+    text-align: center;
+    word-break: break-word;
+    color: #ffd166;
+}
+#airing-soon-grid .desc {
+    font-size: 1.02rem;
+    width: 100%;
+    text-align: center;
+    word-break: break-word;
+    color: #bdbdbd;
+}
+#airing-soon-grid .countdown {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    color: #ff6f61;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+.carousel-viewport {
+    overflow: hidden;
+    position: relative;
+}
+
+/* Hide scrollbar for all browsers */
+#airing-soon-grid.anime-grid {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* IE 10+ */
+}
+#airing-soon-grid.anime-grid::-webkit-scrollbar {
+    display: none;              /* Chrome/Safari/Webkit */
+}
+
+#airing-soon-grid .anime-card:focus,
+#airing-soon-grid .anime-card:active {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffd166; /* Optional: custom focus style */
+}
+
+/* Smooth sliding animation for the carousel */
+#airing-soon-grid.anime-grid {
+    transition: transform 0.6s cubic-bezier(.4,1.4,.6,1);
+    will-change: transform;
+}
