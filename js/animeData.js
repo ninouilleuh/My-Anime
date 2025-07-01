@@ -397,7 +397,7 @@ window.animeData = [
         nextEpisodeDate: "2025-07-19T00:00:00Z",
         trailer: "https://www.youtube.com/embed/zhXaZ4pL8gQ"
     },
-    {
+    { // big asf
         id: "bleach",
         name: "Bleach",
         desc: "",
@@ -473,7 +473,7 @@ window.animeData = [
         nextEpisodeDate: "2026-06-01T00:00:00Z", // Placeholder date for next episode
         trailer: "https://www.youtube.com/embed/HL3eTEn0KXE?si=cvWFrgbuuh_IvTuB"
     },
-    {
+    { // rezero add rnnn
         id: "rezero",
         name: "Re:Zero − Starting Life in Another World",
         desc: "",
@@ -501,6 +501,49 @@ window.animeData = [
         nextEpisodeDate: "2026-01-01T00:00:00Z", // Placeholder date for next episode
         trailer: "https://www.youtube.com/embed/01nLOU3J_Uo?si=NHVofdegBSstCcp3"
     },
-    
-
+    { 
+        id: "Mirai no Mirai",
+        name: "Mirai no Mirai",
+        desc: "",
+        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx100749-7Tptl7EAMAWH.jpg",
+        genres: ["sci-fi", "adventure", "fantasy"],
+        seasons: [
+            {
+                title: "Movie",
+                episodes: 1,
+                videos: [""], //missing
+                videosDub: [""], //missing
+                videosFrSub: ["https://video.sibnet.ru/shell.php?videoid=4781477"],
+                videosFrDub: ["https://video.sibnet.ru/shell.php?videoid=4781471"]
+            }
+        ],
+        ongoing: false
+    },
+    { //missing
+        id: "oshinoko",
+        name: "Oshi no Ko",
+        desc: "",
+        img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx150672-WqmmwZ4nMzAy.png",
+        genres: ["drama", "mystery", "romance", "Music-Video"],
+        seasons: [
+            {
+                title: "Season 1",
+                episodes: 0,
+                videos: [],
+                videosDub: [],
+                videosFrSub: [],
+                videosFrDub: []
+            },
+            {
+                title: "Music Video",
+                episodes: 1, // Placeholder for future seasons
+                videos: ["https://www.youtube.com/embed/ZRtdQ81jPUQ?si=BVQqDXY_1QmEZPwy"],
+                videosDub: ["https://www.youtube.com/embed/ZRtdQ81jPUQ?si=BVQqDXY_1QmEZPwy"],
+                videosFrSub: ["https://www.youtube.com/embed/ZRtdQ81jPUQ?si=BVQqDXY_1QmEZPwy"],
+                videosFrDub: ["https://www.youtube.com/embed/ZRtdQ81jPUQ?si=BVQqDXY_1QmEZPwy"]
+            }
+        ],
+        ongoing: false
+    },
+        
 ];

@@ -1,3 +1,44 @@
+// Suggest Anime Modal/Form Logic
+document.addEventListener('DOMContentLoaded', function() {
+    var openBtn = document.getElementById('open-suggest-form');
+    var form = document.getElementById('suggest-anime-form');
+    var successMsg = document.getElementById('suggest-success');
+    if (openBtn && form) {
+        openBtn.addEventListener('click', function() {
+            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+            successMsg.style.display = 'none';
+        });
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var animeName = document.getElementById('anime-name').value.trim();
+            var animeDesc = document.getElementById('anime-desc').value.trim();
+            if (!animeName) {
+                document.getElementById('anime-name').focus();
+                return;
+            }
+            fetch('http://localhost:3001/suggest-anime', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ animeName: animeName, animeDesc: animeDesc })
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('Failed to send suggestion.');
+                return response.json();
+            })
+            .then(function(data) {
+                successMsg.textContent = 'Thank you! Your suggestion has been sent.';
+                successMsg.style.display = 'block';
+                form.reset();
+            })
+            .catch(function(err) {
+                successMsg.textContent = 'Sorry, there was a problem sending your suggestion.';
+                successMsg.style.display = 'block';
+            });
+        });
+    }
+});
 document.addEventListener('DOMContentLoaded', function() {
     const animeList = window.animeData;
     const upcoming = animeList.filter(a => a.nextEpisodeDate).sort((a, b) =>

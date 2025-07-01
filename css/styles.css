@@ -1,3 +1,67 @@
+/* Suggest Anime Form */
+#suggest-anime-form input[type="text"],
+#suggest-anime-form textarea {
+    font-family: inherit;
+    margin-bottom: 10px;
+    border: 1.5px solid #ffd166;
+    background: #fffbe6;
+    color: #23233a;
+    transition: border 0.18s;
+}
+#suggest-anime-form input[type="text"]:focus,
+#suggest-anime-form textarea:focus {
+    border: 2px solid #ff6f61;
+    outline: none;
+}
+#suggest-anime-form button[type="submit"] {
+    margin-top: 6px;
+}
+/* Call-to-action: Suggest Anime */
+.cta-suggest-anime {
+    background: linear-gradient(90deg, #ff6f61 0%, #ffd166 100%);
+    color: #23233a;
+    border-radius: 18px;
+    padding: 38px 32px 32px 32px;
+    margin: 48px auto 32px auto;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+}
+.cta-suggest-anime h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #23233a;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.cta-suggest-anime p {
+    font-size: 1.13rem;
+    margin-bottom: 22px;
+    color: #23233a;
+    font-weight: 500;
+}
+.cta-btn {
+    display: inline-block;
+    background: #23233a;
+    color: #ffd166;
+    font-size: 1.18rem;
+    font-weight: 700;
+    padding: 14px 38px;
+    border-radius: 32px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, transform 0.18s;
+    border: none;
+    margin-top: 8px;
+}
+.cta-btn:hover, .cta-btn:focus {
+    background: #ffd166;
+    color: #23233a;
+    transform: translateY(-2px) scale(1.04);
+    outline: none;
+}
 body {
     margin: 0;
     font-family: 'Roboto', Arial, sans-serif;

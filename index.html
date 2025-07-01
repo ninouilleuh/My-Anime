@@ -46,6 +46,22 @@
     </div>
 
     <div class="container">
+        <div class="cta-suggest-anime">
+            <h2>Want to see your favorite anime here?</h2>
+            <p>Help us grow AnimeRashii! Suggest a new anime to add to the site.</p>
+            <button class="cta-btn" id="open-suggest-form" type="button">Suggest Anime</button>
+            <form id="suggest-anime-form" style="display:none;margin-top:28px;" autocomplete="off">
+                <input type="text" id="anime-name" name="anime-name" placeholder="Anime name (required)" required style="padding:12px 16px;font-size:1.1rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;">
+                <br>
+                <textarea id="anime-desc" name="anime-desc" placeholder="Description (optional)" rows="3" style="padding:12px 16px;font-size:1.05rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;"></textarea>
+                <br>
+                <button type="submit" class="cta-btn" style="font-size:1.05rem;padding:10px 32px;">Send Suggestion</button>
+                <div id="suggest-success" style="display:none;color:#23233a;background:#ffd166;padding:10px 18px;border-radius:8px;margin-top:16px;font-weight:600;"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
         <h2>Popular Anime</h2>
         <div class="anime-grid">
             <div class="anime-card">
