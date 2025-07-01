@@ -1,3 +1,258 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Luckiest+Guy&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg, #f7e8ff 0%, #e0f7fa 100%);
+    color: #23233a;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('https://svgshare.com/i/14kA.svg') repeat;
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+}
+.donate-top-cta {
+    width: 100%;
+    background: linear-gradient(90deg, #ffb6e6 0%, #ffd166 100%);
+    color: #23233a;
+    text-align: center;
+    font-size: 1.08rem;
+    font-weight: 700;
+    padding: 8px 0 6px 0;
+    letter-spacing: 0.7px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px #ffb6e6aa;
+    border-bottom: 2px solid #ffd166;
+    font-family: 'Mochiy Pop One', 'Luckiest Guy', cursive, Arial, sans-serif;
+}
+.donate-link-top {
+    color: #ff6f61;
+    font-weight: 800;
+    text-decoration: underline;
+    margin-left: 4px;
+    transition: color 0.18s;
+    font-family: inherit;
+}
+.donate-link-top:hover, .donate-link-top:focus {
+    color: #23233a;
+    background: #ffd166;
+    outline: none;
+}
+
+header {
+    background: linear-gradient(90deg, #ffb6e6 0%, #b5e0ff 100%);
+    padding: 28px 0 18px 0;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+    border-bottom: 4px solid #ffd166;
+    position: relative;
+    z-index: 2;
+}
+header h1 {
+    margin: 0;
+    font-size: 2.7rem;
+    letter-spacing: 2.5px;
+    font-family: 'Mochiy Pop One', 'Luckiest Guy', cursive, Arial, sans-serif;
+    color: #ff6f61;
+    text-shadow: 2px 4px 0 #fffbe6, 0 2px 12px #ffb6e6;
+    display: inline-block;
+    padding: 0 18px;
+    border-radius: 18px;
+}
+nav {
+    margin-top: 10px;
+}
+nav a {
+    color: #ff6f61;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+nav a:hover {
+    color: #ffd166;
+}
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+}
+.anime-card {
+    background: #fffbe6;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(255,182,230,0.13), 0 2px 8px rgba(0,0,0,0.10);
+    border: 2.5px solid #ffd166;
+    transition: transform 0.22s, box-shadow 0.22s;
+    position: relative;
+}
+.anime-card:hover {
+    transform: translateY(-7px) scale(1.04) rotate(-1deg);
+    box-shadow: 0 8px 32px #ffb6e6aa, 0 2px 8px rgba(0,0,0,0.13);
+    border-color: #ff6f61;
+}
+.anime-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-bottom: 2px solid #ffd166;
+    background: #fff;
+}
+.anime-card .info {
+    padding: 18px 15px 10px 15px;
+    background: none;
+}
+.anime-card .title {
+    font-size: 1.18rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #e14b4b;
+    font-family: 'Mochiy Pop One', 'Luckiest Guy', cursive, Arial, sans-serif;
+    letter-spacing: 0.5px;
+    text-shadow: none;
+}
+.anime-card .desc {
+    font-size: 1.01rem;
+    color: #7c5e5e;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+.cta-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #ffb6e6 0%, #ffd166 100%);
+    color: #23233a;
+    font-size: 1.18rem;
+    font-weight: 800;
+    padding: 14px 38px;
+    border-radius: 32px;
+    text-decoration: none;
+    box-shadow: 0 2px 12px #ffb6e6aa, 0 2px 8px rgba(0,0,0,0.10);
+    transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
+    border: none;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+}
+.cta-btn:hover, .cta-btn:focus {
+    background: linear-gradient(90deg, #ffd166 0%, #ffb6e6 100%);
+    color: #ff6f61;
+    transform: translateY(-2px) scale(1.07) rotate(-2deg);
+    outline: none;
+    box-shadow: 0 4px 24px #ffd16699, 0 2px 8px rgba(0,0,0,0.13);
+}
+footer {
+    background: #23233a;
+    text-align: center;
+    padding: 18px 0;
+    margin-top: 40px;
+    color: #bdbdbd;
+    font-size: 0.95rem;
+}
+/* Add any additional custom styles for carousel, forms, etc. below */
+/* Tiny donation CTA at the very top */
+.donate-top-cta {
+    width: 100%;
+    background: #ffd166;
+    color: #23233a;
+    text-align: center;
+    font-size: 1.04rem;
+    font-weight: 600;
+    padding: 7px 0 5px 0;
+    letter-spacing: 0.5px;
+    z-index: 1000;
+}
+.donate-link-top {
+    color: #ff6f61;
+    font-weight: 700;
+    text-decoration: underline;
+    margin-left: 4px;
+    transition: color 0.18s;
+}
+.donate-link-top:hover, .donate-link-top:focus {
+    color: #23233a;
+    background: #ffd166;
+    outline: none;
+}
+/* Discreet donation CTA in footer */
+.donate-footer-cta {
+    display: inline-block;
+    margin-left: 18px;
+}
+.donate-link {
+    color: #ffd166;
+    background: none;
+    font-weight: 700;
+    font-size: 1.08rem;
+    text-decoration: none;
+    padding: 2px 10px;
+    border-radius: 16px;
+    transition: background 0.18s, color 0.18s;
+    vertical-align: middle;
+}
+.donate-link:hover, .donate-link:focus {
+    background: #ffd166;
+    color: #23233a;
+    outline: none;
+}
+/* Call-to-action: Donate */
+.cta-donate-anime {
+    background: linear-gradient(90deg, #ffd166 0%, #ff6f61 100%);
+    color: #23233a;
+    border-radius: 18px;
+    padding: 38px 32px 32px 32px;
+    margin: 32px auto 32px auto;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+}
+.cta-donate-anime h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #23233a;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.cta-donate-anime p {
+    font-size: 1.13rem;
+    margin-bottom: 22px;
+    color: #23233a;
+    font-weight: 500;
+}
+.cta-donate-anime .cta-btn {
+    display: inline-block;
+    background: #23233a;
+    color: #ffd166;
+    font-size: 1.18rem;
+    font-weight: 700;
+    padding: 14px 38px;
+    border-radius: 32px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    transition: background 0.18s, color 0.18s, transform 0.18s;
+    border: none;
+    margin-top: 8px;
+}
+.cta-donate-anime .cta-btn:hover, .cta-donate-anime .cta-btn:focus {
+    background: #ffd166;
+    color: #23233a;
+    transform: translateY(-2px) scale(1.04);
+    outline: none;
+}
 /* Suggest Anime Form */
 #suggest-anime-form input[type="text"],
 #suggest-anime-form textarea {
@@ -145,27 +400,39 @@ footer {
     justify-content: center;
     gap: 24px;
     margin-bottom: 32px;
+    background: url('https://i.pinimg.com/736x/14/1e/3f/141e3f55c59242dcaaa6b94cc7263b53--auto-manga.jpg') center/cover no-repeat, linear-gradient(90deg, #e0e7ff 0%, #c7d2fe 100%);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px #b6c6ff33, 0 2px 8px #b6c6ff33;
+    padding: 32px 0 38px 0;
+    position: relative;
+    overflow: visible;
+    min-height: 340px;
 }
 
 /* Carousel navigation buttons */
 .carousel-btn {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     padding: 0 18px;
     border: none;
-    background: none;
-    color: #ffd166;
+    background: #4f5fa3;
+    color: #fff;
     cursor: pointer;
     border-radius: 50%;
-    transition: background 0.2s;
-    height: 48px;
-    width: 48px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
+    height: 56px;
+    width: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 12px #b6c6ff55;
+    position: relative;
+    z-index: 2;
 }
 .carousel-btn:hover {
-    background: #23233a;
-    color: #fff;
+    background: #a5b4fc;
+    color: #23233a;
+    transform: scale(1.08) rotate(-6deg);
+    box-shadow: 0 4px 24px #a5b4fc99;
 }
 .carousel-viewport {
     width: 1016px; /* 3 * 320px + 2 * 28px */
@@ -174,6 +441,9 @@ footer {
     position: relative;
     margin: 0 auto;
     box-sizing: border-box;
+    border-radius: 18px;
+    background: #181824;
+    box-shadow: 0 2px 12px #b6c6ff55;
 }
 #airing-soon-grid.anime-grid {
     display: flex;
@@ -187,22 +457,27 @@ footer {
     width: 320px;
     min-width: 320px;
     max-width: 320px;
-    min-height: 380px;
-    max-height: 400px;
-    height: 400px;
+    min-height: 400px;
+    max-height: 420px;
+    height: 420px;
     box-sizing: border-box;
-    padding: 18px;
-    border-radius: 16px;
+    padding: 18px 18px 12px 18px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #23233a;
+    background: #fff;
     margin: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
-    transition: transform 0.18s;
+    box-shadow: 0 4px 18px #b6c6ff55, 0 2px 8px #b6c6ff33;
+    transition: box-shadow 0.18s, border-color 0.18s;
+    border: 2.5px solid #a5b4fc;
+    will-change: box-shadow, border-color;
 }
 #airing-soon-grid .anime-card:hover {
-    transform: translateY(-6px) scale(1.03);
+    /* No translate/scale/rotate to avoid overflow */
+    box-shadow: 0 8px 32px #a5b4fc99, 0 2px 8px #b6c6ff55;
+    border-color: #4f5fa3;
+    z-index: 1;
 }
 #airing-soon-grid .trailer-frame-wrapper {
     width: 100%;
@@ -228,7 +503,8 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    min-height: 120px;
 }
 #airing-soon-grid .title {
     font-size: 1.18rem;
@@ -246,11 +522,15 @@ footer {
     color: #bdbdbd;
 }
 #airing-soon-grid .countdown {
+    margin-top: auto;
     margin-bottom: 0;
     padding-bottom: 0;
     color: #ff6f61;
     font-weight: bold;
     font-size: 1.05rem;
+    width: 100%;
+    text-align: center;
+    min-height: 1.5em;
 }
 .carousel-viewport {
     overflow: hidden;

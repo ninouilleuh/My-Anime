@@ -1,0 +1,128 @@
+/* Anime header background visual */
+
+.header-anime-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    /* Anime wallpaper background */
+    background: url('https://wallpaperaccess.com/full/5548666.jpg') center/cover no-repeat;
+    opacity: 0.13;
+    pointer-events: none;
+    border-radius: 0 0 32px 32px;
+    filter: blur(0.5px) saturate(1.08) brightness(1.08);
+}
+
+header {
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+    padding-top: 32px;
+    padding-bottom: 38px;
+    box-sizing: border-box;
+}
+
+header .header-content {
+    position: relative;
+    z-index: 2;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    font-family: 'Luckiest Guy', 'Mochiy Pop One', cursive, Arial, sans-serif;
+    color: #ff6f61;
+    text-shadow: 1px 2px 0 #fffbe6, 0 1px 6px #ffb6e6;
+    margin-bottom: 0.2em;
+    margin-top: 0.2em;
+    background: none;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    background-clip: initial;
+}
+
+nav {
+    margin-top: 12px;
+    font-size: 1.15rem;
+}
+
+nav a {
+    color: #ff6f61;
+    font-weight: 800;
+    text-shadow: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    margin: 0 8px;
+    background: rgba(255,255,255,0.08);
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+nav a:hover {
+    background: #ffd166;
+    color: #23233a;
+    box-shadow: 0 2px 12px #ffd16655;
+}
+
+.browse-bar-container {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+#browse-bar {
+    padding: 12px 20px;
+    width: 270px;
+    border-radius: 10px;
+    border: 2px solid #ffd166;
+    font-size: 1.08rem;
+    background: #fffbe6;
+    color: #23233a;
+    font-family: 'Roboto', Arial, sans-serif;
+    box-shadow: 0 2px 8px #ffb6e633;
+    transition: border 0.18s, box-shadow 0.18s;
+}
+#browse-bar:focus {
+    outline: none;
+    border: 2.5px solid #ff6f61;
+    box-shadow: 0 4px 16px #ffd16655;
+}
+#browse-suggestion {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%;
+    z-index: 100;
+    min-width: 260px;
+    background: #23233a;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    padding: 8px 0;
+    display: none;
+}
+#browse-suggestion.active {
+    display: block;
+}
+#browse-suggestion a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #ffd166;
+    min-width: 220px;
+    transition: background 0.15s;
+}
+#browse-suggestion a:hover {
+    background: #181824;
+}
+#browse-suggestion img {
+    width: 48px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 6px;
+}

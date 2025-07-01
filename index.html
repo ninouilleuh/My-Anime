@@ -3,34 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Anime Streaming</title>
+    <title>AnimeRashii</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header-anime.css">
     <script src="js/animeData.js"></script>
     <script src="js/script.js"></script>
 </head>
 <body>
+    <div class="donate-top-cta">
+        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+    </div>
     <header>
-        <h1>My Anime Streaming</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="pages/browse.html">Browse</a>
-            <div class="dropdown" style="display:inline-block;position:relative;">
-                <a href="#" id="genres-link">Genres ▼</a>
-                <div id="genres-dropdown" class="dropdown-content" style="display:none;position:absolute;left:0;top:100%;background:#23233a;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.18);min-width:160px;z-index:200;">
-                    <a href="pages/browse.html?genre=action">Action</a>
-                    <a href="pages/browse.html?genre=adventure">Adventure</a>
-                    <a href="pages/browse.html?genre=fantasy">Fantasy</a>
-                    <a href="pages/browse.html?genre=drama">Drama</a>
-                    <a href="pages/browse.html?genre=sci-fi">Sci-Fi</a>
-                    <a href="pages/browse.html?genre=mystery">Mystery</a>
-                    <a href="pages/browse.html?genre=supernatural">Supernatural</a>
+        <div class="header-anime-bg"></div>
+        <div class="header-content">
+            <h1>AnimeRashii</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="pages/browse.html">Browse</a>
+                <div class="dropdown" style="display:inline-block;position:relative;">
+                    <a href="#" id="genres-link">Genres ▼</a>
+                    <div id="genres-dropdown" class="dropdown-content" style="display:none;position:absolute;left:0;top:100%;background:#23233a;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.18);min-width:160px;z-index:200;">
+                        <a href="pages/browse.html?genre=action">Action</a>
+                        <a href="pages/browse.html?genre=adventure">Adventure</a>
+                        <a href="pages/browse.html?genre=fantasy">Fantasy</a>
+                        <a href="pages/browse.html?genre=drama">Drama</a>
+                        <a href="pages/browse.html?genre=sci-fi">Sci-Fi</a>
+                        <a href="pages/browse.html?genre=mystery">Mystery</a>
+                        <a href="pages/browse.html?genre=supernatural">Supernatural</a>
+                    </div>
                 </div>
+            </nav>
+            <div class="browse-bar-container">
+                <input type="text" id="browse-bar" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
+                <div id="browse-suggestion"></div>
             </div>
-        </nav>
-        <div class="browse-bar-container">
-            <input type="text" id="browse-bar" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
-            <div id="browse-suggestion"></div>
         </div>
     </header>
 
@@ -60,6 +67,8 @@
             </form>
         </div>
     </div>
+
+
 
     <div class="container">
         <h2>Popular Anime</h2>
@@ -168,7 +177,7 @@
         </div>
     </div>
     <footer>
-        &copy; 2025 My Anime Streaming. All rights reserved.
+        &copy; 2025 AnimeRashii. All rights reserved.
     </footer>
 </body>
 </html>
