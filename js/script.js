@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('anime-name').focus();
                 return;
             }
-            fetch('http://localhost:3001/suggest-anime', {
+            fetch('https://my-anime-l74v.onrender.com/suggest-anime', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
