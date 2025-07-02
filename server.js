@@ -1,3 +1,5 @@
+
+require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -25,7 +27,7 @@ const transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: 'apikey', // this is literally the string 'apikey'
-        pass: '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' // <-- replace with your SendGrid API key
+        pass: process.env.SENDGRID_API_KEY // Read from environment variable
     }
 });
 

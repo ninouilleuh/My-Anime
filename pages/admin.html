@@ -77,6 +77,16 @@
     </style>
 </head>
 <body>
+    <div id="admin-password-overlay" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.98);display:flex;align-items:center;justify-content:center;flex-direction:column;">
+        <div style="background:#fff9e6;border:2px solid #ffd166;border-radius:12px;padding:32px 28px;box-shadow:0 2px 16px #0002;min-width:320px;max-width:90vw;">
+            <h2 style="margin-bottom:18px;color:#222;font-size:1.4em;">Admin Login</h2>
+            <label style="font-size:1.05em;">Password:
+                <input id="admin-password-input" type="password" style="margin-left:10px;padding:6px 10px;border-radius:6px;border:1px solid #ffd166;font-size:1em;">
+            </label>
+            <button id="admin-password-submit" style="margin-left:16px;padding:6px 18px;border-radius:6px;background:#ffd166;color:#222;font-weight:bold;border:none;cursor:pointer;font-size:1em;">Login</button>
+            <div id="admin-password-error" style="color:#c00;margin-top:12px;display:none;font-size:1em;">Incorrect password. Try again.</div>
+        </div>
+    </div>
     <div class="donate-top-cta">
         <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
     </div>
@@ -157,13 +167,7 @@
                 <div id="add-episode-fields" style="margin-bottom:8px; display:none;">
                   <b>Select Season:</b><br>
                   <select id="existing-season-select" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select><br>
-                  <b>New Total Episodes:</b><br><input type="number" id="new-episode-count" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"><br>
-                  <b>Episode Links:</b>
-                  <div style="margin-bottom:6px;font-size:0.97em;color:#888;">Leave blank if not available.</div>
-                  <label>Sub: <input type="text" id="new-ep-link-sub" style="width:90%;margin-bottom:6px;"></label><br>
-                  <label>Dub: <input type="text" id="new-ep-link-dub" style="width:90%;margin-bottom:6px;"></label><br>
-                  <label>FrSub: <input type="text" id="new-ep-link-frsub" style="width:90%;margin-bottom:6px;"></label><br>
-                  <label>FrDub: <input type="text" id="new-ep-link-frdub" style="width:90%;margin-bottom:6px;"></label>
+                  <b>New Total Episodes:</b><br><input type="number" id="new-episode-count" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
                 </div>
                 <button type="submit" class="admin-btn">Add</button>
                 <span id="add-episode-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Update successful</span>
@@ -175,6 +179,83 @@
         &copy; 2025 AnimeRashii. All rights reserved.
     </footer>
     <script>
+    // --- Admin Password Protection Overlay + F12 Restriction ---
+    (function() {
+        const overlay = document.getElementById('admin-password-overlay');
+        const input = document.getElementById('admin-password-input');
+        const submit = document.getElementById('admin-password-submit');
+        const error = document.getElementById('admin-password-error');
+        let f12Handler = function(e) {
+            // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && e.key === 'u')
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        };
+        let contextMenuHandler = function(e) {
+            // Block right-click context menu when overlay is visible
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
+        // Focus input on load
+        setTimeout(() => { input.focus(); }, 100);
+        // Attempt to close DevTools if open (works in Chromium-based browsers)
+        function blockIfDevToolsOpen() {
+            // Use a more robust detection for DevTools
+            let threshold = 160;
+            let devtoolsOpen = false;
+            // Only check if window is not maximized (to avoid false positives)
+            if (
+                (window.outerWidth > 0 && window.innerWidth > 0 && window.outerWidth - window.innerWidth > threshold) ||
+                (window.outerHeight > 0 && window.innerHeight > 0 && window.outerHeight - window.innerHeight > threshold)
+            ) {
+                devtoolsOpen = true;
+            }
+            // Remove timing/debugger check to avoid false positives
+            if (devtoolsOpen) {
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#fffbe6;"><div style="background:#fff9e6;border:2px solid #ffd166;border-radius:12px;padding:32px 28px;box-shadow:0 2px 16px #0002;min-width:320px;max-width:90vw;text-align:center;"><h2 style="color:#e14b4b;">Access Denied</h2><p style="color:#222;font-size:1.1em;">Admin page cannot be accessed while browser DevTools is open.<br>Please close DevTools and reload the page.</p></div></div>';
+                document.body.style.overflow = 'hidden';
+                document.body.style.pointerEvents = 'none';
+                document.body.style.userSelect = 'none';
+            }
+        }
+        function enableF12Block() {
+            window.addEventListener('keydown', f12Handler, true);
+            window.addEventListener('contextmenu', contextMenuHandler, true);
+        }
+        function disableF12Block() {
+            window.removeEventListener('keydown', f12Handler, true);
+            window.removeEventListener('contextmenu', contextMenuHandler, true);
+        }
+        function checkPassword() {
+            if (input.value === 'nina93200!admin') {
+                overlay.style.display = 'none';
+                input.value = '';
+                error.style.display = 'none';
+                disableF12Block();
+            } else {
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+        submit.onclick = checkPassword;
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+        // Prevent interaction with page until unlocked
+        document.addEventListener('DOMContentLoaded', function() {
+            blockIfDevToolsOpen();
+            overlay.style.display = '';
+            enableF12Block();
+        });
+    })();
     // --- Dynamic Seasons/Episodes Form Logic ---
     const seasonsList = document.getElementById('seasons-list');
     let seasonCount = 0;
@@ -356,23 +437,8 @@
             // Add episode to existing season
             const seasonIdx = parseInt(seasonSelect.value, 10);
             const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
-            const linkSub = document.getElementById('new-ep-link-sub').value.trim();
-            const linkDub = document.getElementById('new-ep-link-dub').value.trim();
-            const linkFrSub = document.getElementById('new-ep-link-frsub').value.trim();
-            const linkFrDub = document.getElementById('new-ep-link-frdub').value.trim();
             if (updatedAnime.seasons[seasonIdx]) {
-                // Update episode count
                 updatedAnime.seasons[seasonIdx].episodes = newEpCount;
-                // Add links to the correct arrays (push empty string if not provided)
-                if (linkSub) updatedAnime.seasons[seasonIdx].videos = updatedAnime.seasons[seasonIdx].videos || [];
-                if (linkDub) updatedAnime.seasons[seasonIdx].videosDub = updatedAnime.seasons[seasonIdx].videosDub || [];
-                if (linkFrSub) updatedAnime.seasons[seasonIdx].videosFrSub = updatedAnime.seasons[seasonIdx].videosFrSub || [];
-                if (linkFrDub) updatedAnime.seasons[seasonIdx].videosFrDub = updatedAnime.seasons[seasonIdx].videosFrDub || [];
-                // Add links for the new episode (at the end)
-                if (linkSub) updatedAnime.seasons[seasonIdx].videos.push(linkSub);
-                if (linkDub) updatedAnime.seasons[seasonIdx].videosDub.push(linkDub);
-                if (linkFrSub) updatedAnime.seasons[seasonIdx].videosFrSub.push(linkFrSub);
-                if (linkFrDub) updatedAnime.seasons[seasonIdx].videosFrDub.push(linkFrDub);
             }
         }
         // Send PATCH to backend
@@ -411,5 +477,6 @@
         // Populate anime/season selects for add-episode form
         populateAnimeSelect();
     });
+    </script>
 </body>
 </html>
