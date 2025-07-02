@@ -45,13 +45,11 @@ async function renderPopularAnime(animeList) {
 }
 
 // --- Global Anime View Tracking ---
-// Track view for any anime card click on the site (not just popular section)
-// --- Global Anime View Tracking ---
-// Track view for any anime card click on the site (not just popular section)
-// --- Global Anime View Tracking ---
-// Track view for any anime card click on the site (not just popular section)
+
 let homepageAnimeList = [];
-document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() {
+
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Global Anime View Tracking ---
     document.body.addEventListener('click', function(e) {
         // Only handle left-clicks with no modifier keys (to avoid ctrl+click, middle click, etc)
         if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
@@ -67,10 +65,8 @@ document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() 
             el = el.parentElement;
         }
     }, true);
-});
 
-// --- Main DOMContentLoaded Handler ---
-document.addEventListener('DOMContentLoaded', function() {
+    // --- Main DOMContentLoaded Handler ---
     // Suggest Anime Modal/Form Logic
     var openBtn = document.getElementById('open-suggest-form');
     var form = document.getElementById('suggest-anime-form');
@@ -254,3 +250,4 @@ document.addEventListener('DOMContentLoaded', function() {
             renderPopularAnime(animeList);
         });
 });
+
