@@ -102,7 +102,23 @@
                 <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Add New Anime</legend>
                 <div style="margin-bottom:8px;"><b>Name:</b><br><input type="text" id="new-anime-name" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
                 <!-- ID field removed: ID will be auto-generated from name -->
-                <div style="margin-bottom:8px;"><b>Genres</b> <span style="font-size:0.95em; color:#888;">(comma separated)</span>:<br><input type="text" id="new-anime-genres" placeholder="e.g. action, fantasy, drama" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;">
+                  <b>Genres</b> <span style="font-size:0.95em; color:#888;">(select one or more)</span>:<br>
+                  <select id="new-anime-genres" multiple size="7" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
+                    <option value="action">Action</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="drama">Drama</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="supernatural">Supernatural</option>
+                    <option value="romance">Romance</option>
+                    <option value="psychological">Psychological</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="music-video">Music-Video</option>
+                  </select>
+                  <div style="font-size:0.93em;color:#888;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple genres.</div>
+                </div>
                 <div style="margin-bottom:8px;"><b>Ongoing:</b> <input type="checkbox" id="new-anime-ongoing" style="margin-left:8px;"></div>
                 <div style="margin-bottom:8px;"><b>Image URL:</b><br><input type="text" id="new-anime-img" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
                 <div style="margin-bottom:8px;"><b>Description:</b><br><textarea id="new-anime-desc" rows="2" style="width:98%;margin:6px 0 10px 0; border-radius:6px; border:1px solid #ffd166; padding:4px 8px;"></textarea></div>
@@ -116,6 +132,41 @@
                 <br>
                 <button type="submit" class="admin-btn">Add Anime</button>
                 <span id="add-anime-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Anime added (session only)</span>
+            </fieldset>
+        </form>
+        </div>
+
+        <div class="admin-section">
+        <h2>Add Season or Episode to Existing Anime</h2>
+        <form id="add-episode-form" style="margin-bottom:24px;">
+            <fieldset style="border:1.5px solid #ffd166; border-radius:12px; padding:18px 14px 10px 14px; background:#fff; margin-bottom:18px;">
+                <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Add Season/Episode</legend>
+                <div style="margin-bottom:8px;">
+                  <b>Select Anime:</b><br>
+                  <select id="existing-anime-select" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select>
+                </div>
+                <div style="margin-bottom:8px;">
+                  <b>Action:</b><br>
+                  <label><input type="radio" name="add-action" value="season" checked> Add New Season</label>
+                  <label style="margin-left:18px;"><input type="radio" name="add-action" value="episode"> Add Episode to Existing Season</label>
+                </div>
+                <div id="add-season-fields" style="margin-bottom:8px;">
+                  <b>Season Title:</b><br><input type="text" id="new-season-title" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"><br>
+                  <b>Episodes:</b><br><input type="number" id="new-season-episodes" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
+                </div>
+                <div id="add-episode-fields" style="margin-bottom:8px; display:none;">
+                  <b>Select Season:</b><br>
+                  <select id="existing-season-select" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select><br>
+                  <b>New Total Episodes:</b><br><input type="number" id="new-episode-count" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"><br>
+                  <b>Episode Links:</b>
+                  <div style="margin-bottom:6px;font-size:0.97em;color:#888;">Leave blank if not available.</div>
+                  <label>Sub: <input type="text" id="new-ep-link-sub" style="width:90%;margin-bottom:6px;"></label><br>
+                  <label>Dub: <input type="text" id="new-ep-link-dub" style="width:90%;margin-bottom:6px;"></label><br>
+                  <label>FrSub: <input type="text" id="new-ep-link-frsub" style="width:90%;margin-bottom:6px;"></label><br>
+                  <label>FrDub: <input type="text" id="new-ep-link-frdub" style="width:90%;margin-bottom:6px;"></label>
+                </div>
+                <button type="submit" class="admin-btn">Add</button>
+                <span id="add-episode-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Update successful</span>
             </fieldset>
         </form>
         </div>
@@ -156,7 +207,8 @@
             .replace(/\s+/g, '-')         // spaces to dash
             .replace(/-+/g, '-')           // collapse multiple dashes
             .replace(/^-+|-+$/g, '');      // trim dashes
-        const genres = document.getElementById('new-anime-genres').value.split(',').map(g => g.trim()).filter(Boolean);
+        // Get selected genres from multi-select
+        const genres = Array.from(document.getElementById('new-anime-genres').selectedOptions).map(opt => opt.value);
         const ongoing = document.getElementById('new-anime-ongoing').checked;
         const img = document.getElementById('new-anime-img').value.trim();
         const desc = document.getElementById('new-anime-desc').value.trim();
@@ -242,6 +294,122 @@
             idPreview.textContent = id ? `ID: ${id}` : '';
         });
     });
-    </script>
+    // --- Add Season/Episode Form Logic ---
+    const addEpisodeForm = document.getElementById('add-episode-form');
+    const animeSelect = document.getElementById('existing-anime-select');
+    const seasonSelect = document.getElementById('existing-season-select');
+    const addSeasonFields = document.getElementById('add-season-fields');
+    const addEpisodeFields = document.getElementById('add-episode-fields');
+    const addEpisodeSuccess = document.getElementById('add-episode-success');
+    let animeDataCache = [];
+
+    async function populateAnimeSelect() {
+        animeSelect.innerHTML = '';
+        animeDataCache = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        animeDataCache.forEach(anime => {
+            const opt = document.createElement('option');
+            opt.value = anime.id;
+            opt.textContent = anime.name;
+            animeSelect.appendChild(opt);
+        });
+        populateSeasonSelect();
+    }
+
+    function populateSeasonSelect() {
+        seasonSelect.innerHTML = '';
+        const anime = animeDataCache.find(a => a.id === animeSelect.value);
+        if (!anime || !anime.seasons) return;
+        anime.seasons.forEach((season, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = season.title || `Season ${idx+1}`;
+            seasonSelect.appendChild(opt);
+        });
+    }
+
+    animeSelect.addEventListener('change', populateSeasonSelect);
+
+    addEpisodeForm.querySelectorAll('input[name="add-action"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'season') {
+                addSeasonFields.style.display = '';
+                addEpisodeFields.style.display = 'none';
+            } else {
+                addSeasonFields.style.display = 'none';
+                addEpisodeFields.style.display = '';
+            }
+        });
+    });
+
+    addEpisodeForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const animeId = animeSelect.value;
+        const action = addEpisodeForm.querySelector('input[name="add-action"]:checked').value;
+        let updatedAnime = animeDataCache.find(a => a.id === animeId);
+        if (!updatedAnime) return;
+        if (action === 'season') {
+            // Add new season
+            const title = document.getElementById('new-season-title').value.trim() || `Season ${updatedAnime.seasons.length+1}`;
+            const episodes = parseInt(document.getElementById('new-season-episodes').value, 10) || 1;
+            updatedAnime.seasons.push({ title, episodes, videos: [], videosDub: [], videosFrSub: [], videosFrDub: [] });
+        } else {
+            // Add episode to existing season
+            const seasonIdx = parseInt(seasonSelect.value, 10);
+            const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
+            const linkSub = document.getElementById('new-ep-link-sub').value.trim();
+            const linkDub = document.getElementById('new-ep-link-dub').value.trim();
+            const linkFrSub = document.getElementById('new-ep-link-frsub').value.trim();
+            const linkFrDub = document.getElementById('new-ep-link-frdub').value.trim();
+            if (updatedAnime.seasons[seasonIdx]) {
+                // Update episode count
+                updatedAnime.seasons[seasonIdx].episodes = newEpCount;
+                // Add links to the correct arrays (push empty string if not provided)
+                if (linkSub) updatedAnime.seasons[seasonIdx].videos = updatedAnime.seasons[seasonIdx].videos || [];
+                if (linkDub) updatedAnime.seasons[seasonIdx].videosDub = updatedAnime.seasons[seasonIdx].videosDub || [];
+                if (linkFrSub) updatedAnime.seasons[seasonIdx].videosFrSub = updatedAnime.seasons[seasonIdx].videosFrSub || [];
+                if (linkFrDub) updatedAnime.seasons[seasonIdx].videosFrDub = updatedAnime.seasons[seasonIdx].videosFrDub || [];
+                // Add links for the new episode (at the end)
+                if (linkSub) updatedAnime.seasons[seasonIdx].videos.push(linkSub);
+                if (linkDub) updatedAnime.seasons[seasonIdx].videosDub.push(linkDub);
+                if (linkFrSub) updatedAnime.seasons[seasonIdx].videosFrSub.push(linkFrSub);
+                if (linkFrDub) updatedAnime.seasons[seasonIdx].videosFrDub.push(linkFrDub);
+            }
+        }
+        // Send PATCH to backend
+        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ seasons: updatedAnime.seasons })
+        });
+        if (resp.ok) {
+            addEpisodeSuccess.style.display = 'inline';
+            setTimeout(() => { addEpisodeSuccess.style.display = 'none'; }, 2000);
+            await populateAnimeSelect();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAdminAnimeTable();
+        // Auto-generate and preview ID as user types name
+        const nameInput = document.getElementById('new-anime-name');
+        let idPreview = document.getElementById('anime-id-preview');
+        if (!idPreview) {
+            idPreview = document.createElement('div');
+            idPreview.id = 'anime-id-preview';
+            idPreview.style = 'color:#888;font-size:0.98em;margin-bottom:8px;';
+            nameInput.parentElement.appendChild(idPreview);
+        }
+        nameInput.addEventListener('input', function() {
+            const id = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            idPreview.textContent = id ? `ID: ${id}` : '';
+        });
+        // Populate anime/season selects for add-episode form
+        populateAnimeSelect();
+    });
 </body>
 </html>
