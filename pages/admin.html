@@ -436,14 +436,22 @@
             const episodes = parseInt(document.getElementById('new-season-episodes').value, 10) || 1;
             updatedAnime.seasons.push({ title, episodes, videos: [], videosDub: [], videosFrSub: [], videosFrDub: [] });
         } else {
-            // Add episode to existing season
+            // Add episode to existing season (append only new links)
             const seasonIdx = parseInt(seasonSelect.value, 10);
             const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
             if (updatedAnime.seasons[seasonIdx]) {
                 // Update episode count
+                const prevCount = updatedAnime.seasons[seasonIdx].episodes || 0;
                 updatedAnime.seasons[seasonIdx].episodes = newEpCount;
-                // Collect links for each episode and language
-                const links = collectEpisodeLinksInputs(newEpCount);
+                // Collect links for new episodes only, preserve old
+                const prev = {
+                    videos: (updatedAnime.seasons[seasonIdx].videos||[]).slice(),
+                    videosDub: (updatedAnime.seasons[seasonIdx].videosDub||[]).slice(),
+                    videosFrSub: (updatedAnime.seasons[seasonIdx].videosFrSub||[]).slice(),
+                    videosFrDub: (updatedAnime.seasons[seasonIdx].videosFrDub||[]).slice(),
+                    prevCount
+                };
+                const links = collectEpisodeLinksInputs(newEpCount, prev);
                 updatedAnime.seasons[seasonIdx].videos = links.videos;
                 updatedAnime.seasons[seasonIdx].videosDub = links.videosDub;
                 updatedAnime.seasons[seasonIdx].videosFrSub = links.videosFrSub;
@@ -468,27 +476,41 @@
         const container = document.getElementById('episode-links-container');
         container.innerHTML = '';
         const count = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
+        const animeId = animeSelect.value;
+        const seasonIdx = parseInt(seasonSelect.value, 10);
+        const anime = animeDataCache.find(a => a.id === animeId);
+        const season = anime && anime.seasons && anime.seasons[seasonIdx];
+        // Use existing links if present
+        const existingVideos = (season && Array.isArray(season.videos)) ? season.videos : [];
+        const existingVideosDub = (season && Array.isArray(season.videosDub)) ? season.videosDub : [];
+        const existingVideosFrSub = (season && Array.isArray(season.videosFrSub)) ? season.videosFrSub : [];
+        const existingVideosFrDub = (season && Array.isArray(season.videosFrDub)) ? season.videosFrDub : [];
+        const prevEpCount = season && typeof season.episodes === 'number' ? season.episodes : 0;
         for (let i = 0; i < count; i++) {
             const block = document.createElement('div');
             block.className = 'episode-links-block';
             block.style = 'border:1px solid #ffd166; border-radius:8px; margin-bottom:10px; padding:8px 6px; background:#fff9e6;';
+            // If this is an existing episode, prefill and make readonly
+            const isExisting = i < prevEpCount;
             block.innerHTML = `
                 <div style="font-weight:700;color:#e14b4b;margin-bottom:4px;">Episode ${i+1} Links:</div>
-                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" value="${existingVideos[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" value="${existingVideosDub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" value="${existingVideosFrSub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" value="${existingVideosFrDub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
             `;
             container.appendChild(block);
         }
     }
 
-    function collectEpisodeLinksInputs(count) {
-        const videos = [];
-        const videosDub = [];
-        const videosFrSub = [];
-        const videosFrDub = [];
-        for (let i = 0; i < count; i++) {
+    function collectEpisodeLinksInputs(count, prev) {
+        // prev: {videos, videosDub, videosFrSub, videosFrDub, prevCount}
+        const videos = prev && prev.videos ? prev.videos.slice() : [];
+        const videosDub = prev && prev.videosDub ? prev.videosDub.slice() : [];
+        const videosFrSub = prev && prev.videosFrSub ? prev.videosFrSub.slice() : [];
+        const videosFrDub = prev && prev.videosFrDub ? prev.videosFrDub.slice() : [];
+        const prevCount = prev && typeof prev.prevCount === 'number' ? prev.prevCount : 0;
+        for (let i = prevCount; i < count; i++) {
             videos[i] = document.querySelector(`.ep-link-sub[data-ep="${i}"]`)?.value.trim() || '';
             videosDub[i] = document.querySelector(`.ep-link-dub[data-ep="${i}"]`)?.value.trim() || '';
             videosFrSub[i] = document.querySelector(`.ep-link-frsub[data-ep="${i}"]`)?.value.trim() || '';
