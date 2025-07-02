@@ -1,53 +1,36 @@
 // --- Popular Anime Ranking ---
-function logAllAnimeViews() {
-    const views = getAnimeViews();
-    if (!window.animeData) {
-        console.log('No animeData loaded.');
-        return;
-    }
-    window.animeData.forEach(anime => {
-        console.log(`${anime.name} (id: ${anime.id}): ${views[anime.id] || 0} views`);
-    });
-}
-function resetAnimeViews() {
-    localStorage.removeItem('animeViews');
-    if (document.getElementById('popular-anime-grid')) {
-        renderPopularAnime();
+// --- Global View Count Helpers ---
+async function getBackendView(animeId) {
+    try {
+        const res = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}/views`);
+        if (!res.ok) return 0;
+        const data = await res.json();
+        return data.views || 0;
+    } catch {
+        return 0;
     }
 }
-function getAnimeViews() {
-    return JSON.parse(localStorage.getItem('animeViews') || '{}');
-}
-function incrementAnimeView(animeId) {
-    const views = getAnimeViews();
-    views[animeId] = (views[animeId] || 0) + 1;
-    localStorage.setItem('animeViews', JSON.stringify(views));
-}
-function getPopularAnimeList(animeList, topN = 5) {
-    const views = getAnimeViews();
-    // Always include the topN by view count, even if they had 0 views before
-    return [...animeList]
-        .map(a => ({...a, views: views[a.id] || 0}))
+async function getPopularAnimeList(animeList, topN = 5) {
+    // Fetch all view counts in parallel
+    const animeWithViews = await Promise.all(animeList.map(async a => {
+        const views = await getBackendView(a.id);
+        return { ...a, views };
+    }));
+    return animeWithViews
         .sort((a, b) => b.views - a.views || a.name.localeCompare(b.name))
         .slice(0, topN);
 }
-// Accept animeList as parameter for up-to-date data
-function renderPopularAnime(animeList) {
+async function renderPopularAnime(animeList) {
     const grid = document.getElementById('popular-anime-grid');
     if (!grid) return;
-    const views = getAnimeViews();
-    // Sort all anime by view count, then name, and take top 5
-    const popular = [...animeList]
-        .map(a => ({...a, views: views[a.id] || 0}))
-        .sort((a, b) => b.views - a.views || a.name.localeCompare(b.name))
-        .slice(0, 5);
+    const popular = await getPopularAnimeList(animeList, 5);
     grid.innerHTML = popular.map((anime, idx) => `
         <div class="anime-card" style="position:relative;">
             <a href="pages/anime.html?id=${anime.id}" class="popular-anime-link" data-anime-id="${anime.id}" style="display:block;position:relative;">
                 <img src="${anime.img}" alt="${anime.name}">
                 <div class="rank-bubble">${idx + 1}</div>
                 <div class="views-bubble image-bubble">
-                    <span style="font-size:1.13em;line-height:1;">${anime.views}</span>
+                    <span style="font-size:1.13em;line-height:1;" id="views-count-${anime.id}">${anime.views}</span>
                     <span style="font-size:0.93em;opacity:0.85;">view${anime.views === 1 ? '' : 's'}</span>
                 </div>
             </a>
@@ -55,12 +38,10 @@ function renderPopularAnime(animeList) {
                 <div class="title" style="display:flex;align-items:center;gap:8px;">
                     <a href="pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a>
                 </div>
-                <!-- Description removed for popular anime cards -->
                 ${idx === 0 ? '<div style="margin-top:8px;color:#facc15;font-size:1.1em;">★ Most Popular</div>' : ''}
             </div>
         </div>
     `).join('');
-    // Remove click tracking here: global handler manages all anime links
 }
 
 // --- Global Anime View Tracking ---
@@ -70,7 +51,7 @@ function renderPopularAnime(animeList) {
 // --- Global Anime View Tracking ---
 // Track view for any anime card click on the site (not just popular section)
 document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() {
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', async function(e) {
         // Only handle left-clicks with no modifier keys (to avoid ctrl+click, middle click, etc)
         if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         let el = e.target;
@@ -79,10 +60,11 @@ document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() 
                 // Extract id from href
                 const match = el.href.match(/anime.html\?id=([^&#]+)/);
                 if (match && match[1]) {
-                    incrementAnimeView(match[1]);
+                    // Increment view count in backend
+                    await fetch(`https://my-anime-l74v.onrender.com/api/anime/${match[1]}/views`, { method: 'POST' });
                     // If on index page, update popular section
                     if (document.getElementById('popular-anime-grid')) {
-                        setTimeout(renderPopularAnime, 0);
+                        setTimeout(() => renderPopularAnime(window.animeData || []), 0);
                     }
                 }
                 break;
