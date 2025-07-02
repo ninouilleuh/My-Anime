@@ -52,21 +52,15 @@ async function renderPopularAnime(animeList) {
 // Track view for any anime card click on the site (not just popular section)
 let homepageAnimeList = [];
 document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() {
-    document.body.addEventListener('click', async function(e) {
+    document.body.addEventListener('click', function(e) {
         // Only handle left-clicks with no modifier keys (to avoid ctrl+click, middle click, etc)
         if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         let el = e.target;
         while (el && el !== document.body) {
             if (el.tagName === 'A' && el.href && el.href.includes('anime.html?id=')) {
-                // Extract id from href
-                const match = el.href.match(/anime.html\?id=([^&#]+)/);
-                if (match && match[1]) {
-                    // Increment view count in backend
-                    await fetch(`https://my-anime-l74v.onrender.com/api/anime/${match[1]}/views`, { method: 'POST' });
-                    // If on index page, update popular section
-                    if (document.getElementById('popular-anime-grid')) {
-                        setTimeout(() => renderPopularAnime(homepageAnimeList), 0);
-                    }
+                // No view increment here! Only update popular section if needed
+                if (document.getElementById('popular-anime-grid')) {
+                    setTimeout(() => renderPopularAnime(homepageAnimeList), 0);
                 }
                 break;
             }
