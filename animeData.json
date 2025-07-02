@@ -251,9 +251,10 @@
     "desc": "Light Yagami is a genius high school student who is about to learn about life through a book of death. When a bored shinigami, a God of Death, named Ryuk drops a black notepad called a Death Note, Light receives power over life and death with the stroke of a pen. Determined to use this dark gift for the best, Light sets out to rid the world of evil… namely, the people he believes to be evil. Should anyone hold such power? The consequences of Light’s actions will set the world ablaze.",
     "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1535-kUgkcrfOrkUM.jpg",
     "genres": [
-      "drama",
+      "psychological",
       "mystery",
-      "supernatural"
+      "supernatural",
+      "thriller"
     ],
     "seasons": [
       {
@@ -275,7 +276,9 @@
     "genres": [
       "action",
       "adventure",
-      "fantasy"
+      "fantasy",
+      "drama",
+      "supernatural"
     ],
     "seasons": [
       {
@@ -444,10 +447,13 @@
     "desc": "",
     "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21355-wRVUrGxpvIQQ.jpg",
     "genres": [
+      "action",
+      "adventure",
       "fantasy",
       "drama",
       "psychological",
-      "thriller"
+      "thriller",
+      "romance"
     ],
     "seasons": [
       {
@@ -477,9 +483,11 @@
     "desc": "",
     "img": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx100749-7Tptl7EAMAWH.jpg",
     "genres": [
-      "sci-fi",
+      "comedy",
       "adventure",
-      "fantasy"
+      "fantasy",
+      "slice-of-life",
+      "drama"
     ],
     "seasons": [
       {
@@ -510,8 +518,8 @@
     "genres": [
       "drama",
       "mystery",
-      "romance",
-      "Music-Video"
+      "psychological",
+      "supernatural"
     ],
     "seasons": [
       {
