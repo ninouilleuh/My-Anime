@@ -50,6 +50,7 @@ async function renderPopularAnime(animeList) {
 // Track view for any anime card click on the site (not just popular section)
 // --- Global Anime View Tracking ---
 // Track view for any anime card click on the site (not just popular section)
+let homepageAnimeList = [];
 document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() {
     document.body.addEventListener('click', async function(e) {
         // Only handle left-clicks with no modifier keys (to avoid ctrl+click, middle click, etc)
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() 
                     await fetch(`https://my-anime-l74v.onrender.com/api/anime/${match[1]}/views`, { method: 'POST' });
                     // If on index page, update popular section
                     if (document.getElementById('popular-anime-grid')) {
-                        setTimeout(() => renderPopularAnime(window.animeData || []), 0);
+                        setTimeout(() => renderPopularAnime(homepageAnimeList), 0);
                     }
                 }
                 break;
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('https://my-anime-l74v.onrender.com/api/anime')
         .then(res => res.json())
         .then(animeList => {
+            homepageAnimeList = animeList;
             // Carousel and Airing Soon
             const upcoming = animeList.filter(a => a.nextEpisodeDate).sort((a, b) =>
                 new Date(a.nextEpisodeDate) - new Date(b.nextEpisodeDate)
