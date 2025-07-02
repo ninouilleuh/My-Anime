@@ -101,7 +101,7 @@
             <fieldset style="border:1.5px solid #ffd166; border-radius:12px; padding:18px 14px 10px 14px; background:#fff; margin-bottom:18px;">
                 <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Add New Anime</legend>
                 <div style="margin-bottom:8px;"><b>Name:</b><br><input type="text" id="new-anime-name" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
-                <div style="margin-bottom:8px;"><b>ID:</b><br><input type="text" id="new-anime-id" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <!-- ID field removed: ID will be auto-generated from name -->
                 <div style="margin-bottom:8px;"><b>Genres</b> <span style="font-size:0.95em; color:#888;">(comma separated)</span>:<br><input type="text" id="new-anime-genres" placeholder="e.g. action, fantasy, drama" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
                 <div style="margin-bottom:8px;"><b>Ongoing:</b> <input type="checkbox" id="new-anime-ongoing" style="margin-left:8px;"></div>
                 <div style="margin-bottom:8px;"><b>Image URL:</b><br><input type="text" id="new-anime-img" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
@@ -149,7 +149,13 @@
     document.getElementById('add-anime-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         const name = document.getElementById('new-anime-name').value.trim();
-        const id = document.getElementById('new-anime-id').value.trim();
+        // Generate ID from name: lowercase, replace spaces with '-', remove special chars
+        const id = name
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+            .replace(/\s+/g, '-')         // spaces to dash
+            .replace(/-+/g, '-')           // collapse multiple dashes
+            .replace(/^-+|-+$/g, '');      // trim dashes
         const genres = document.getElementById('new-anime-genres').value.split(',').map(g => g.trim()).filter(Boolean);
         const ongoing = document.getElementById('new-anime-ongoing').checked;
         const img = document.getElementById('new-anime-img').value.trim();
@@ -217,6 +223,24 @@
     }
     document.addEventListener('DOMContentLoaded', function() {
         renderAdminAnimeTable();
+        // Auto-generate and preview ID as user types name
+        const nameInput = document.getElementById('new-anime-name');
+        let idPreview = document.getElementById('anime-id-preview');
+        if (!idPreview) {
+            idPreview = document.createElement('div');
+            idPreview.id = 'anime-id-preview';
+            idPreview.style = 'color:#888;font-size:0.98em;margin-bottom:8px;';
+            nameInput.parentElement.appendChild(idPreview);
+        }
+        nameInput.addEventListener('input', function() {
+            const id = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            idPreview.textContent = id ? `ID: ${id}` : '';
+        });
     });
     </script>
 </body>
