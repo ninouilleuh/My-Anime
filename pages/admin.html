@@ -168,6 +168,7 @@
                   <b>Select Season:</b><br>
                   <select id="existing-season-select" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select><br>
                   <b>New Total Episodes:</b><br><input type="number" id="new-episode-count" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
+                  <div id="episode-links-container"></div>
                 </div>
                 <button type="submit" class="admin-btn">Add</button>
                 <span id="add-episode-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Update successful</span>
@@ -418,6 +419,7 @@
             } else {
                 addSeasonFields.style.display = 'none';
                 addEpisodeFields.style.display = '';
+                updateEpisodeLinksInputs();
             }
         });
     });
@@ -438,7 +440,14 @@
             const seasonIdx = parseInt(seasonSelect.value, 10);
             const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
             if (updatedAnime.seasons[seasonIdx]) {
+                // Update episode count
                 updatedAnime.seasons[seasonIdx].episodes = newEpCount;
+                // Collect links for each episode and language
+                const links = collectEpisodeLinksInputs(newEpCount);
+                updatedAnime.seasons[seasonIdx].videos = links.videos;
+                updatedAnime.seasons[seasonIdx].videosDub = links.videosDub;
+                updatedAnime.seasons[seasonIdx].videosFrSub = links.videosFrSub;
+                updatedAnime.seasons[seasonIdx].videosFrDub = links.videosFrDub;
             }
         }
         // Send PATCH to backend
@@ -451,6 +460,57 @@
             addEpisodeSuccess.style.display = 'inline';
             setTimeout(() => { addEpisodeSuccess.style.display = 'none'; }, 2000);
             await populateAnimeSelect();
+            updateEpisodeLinksInputs();
+        }
+    });
+    // --- Dynamic Episode Links Inputs ---
+    function updateEpisodeLinksInputs() {
+        const container = document.getElementById('episode-links-container');
+        container.innerHTML = '';
+        const count = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
+        for (let i = 0; i < count; i++) {
+            const block = document.createElement('div');
+            block.className = 'episode-links-block';
+            block.style = 'border:1px solid #ffd166; border-radius:8px; margin-bottom:10px; padding:8px 6px; background:#fff9e6;';
+            block.innerHTML = `
+                <div style="font-weight:700;color:#e14b4b;margin-bottom:4px;">Episode ${i+1} Links:</div>
+                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+            `;
+            container.appendChild(block);
+        }
+    }
+
+    function collectEpisodeLinksInputs(count) {
+        const videos = [];
+        const videosDub = [];
+        const videosFrSub = [];
+        const videosFrDub = [];
+        for (let i = 0; i < count; i++) {
+            videos[i] = document.querySelector(`.ep-link-sub[data-ep="${i}"]`)?.value.trim() || '';
+            videosDub[i] = document.querySelector(`.ep-link-dub[data-ep="${i}"]`)?.value.trim() || '';
+            videosFrSub[i] = document.querySelector(`.ep-link-frsub[data-ep="${i}"]`)?.value.trim() || '';
+            videosFrDub[i] = document.querySelector(`.ep-link-frdub[data-ep="${i}"]`)?.value.trim() || '';
+        }
+        return { videos, videosDub, videosFrSub, videosFrDub };
+    }
+
+    // Update episode links inputs when episode count changes
+    document.getElementById('new-episode-count').addEventListener('input', function() {
+        updateEpisodeLinksInputs();
+    });
+
+    // Also update when switching anime/season
+    animeSelect.addEventListener('change', function() {
+        if (addEpisodeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
+        }
+    });
+    seasonSelect.addEventListener('change', function() {
+        if (addEpisodeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
         }
     });
 
