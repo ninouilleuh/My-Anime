@@ -49,8 +49,10 @@ async function loadAnimePage() {
             timerDiv.style.display = "none";
         }
 
-        // Increment view count (site-wide)
-        fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}/views`, { method: 'POST' });
+        // Increment view count (site-wide) only once, after rendering
+        try {
+            await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}/views`, { method: 'POST' });
+        } catch (e) { /* ignore errors */ }
     } else {
         document.querySelector('.anime-details').innerHTML = "<p>Anime not found.</p>";
     }
