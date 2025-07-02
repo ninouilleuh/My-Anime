@@ -502,7 +502,7 @@ window.animeData = [
         trailer: "https://www.youtube.com/embed/01nLOU3J_Uo?si=NHVofdegBSstCcp3"
     },
     { 
-        id: "Mirai no Mirai",
+        id: "Mirai-no-Mirai",
         name: "Mirai no Mirai",
         desc: "",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx100749-7Tptl7EAMAWH.jpg",
@@ -520,7 +520,7 @@ window.animeData = [
         ongoing: false
     },
     { //missing
-        id: "oshinoko",
+        id: "oshi-no-ko",
         name: "Oshi no Ko",
         desc: "",
         img: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx150672-WqmmwZ4nMzAy.png",

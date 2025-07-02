@@ -1,5 +1,101 @@
-// Suggest Anime Modal/Form Logic
+// --- Popular Anime Ranking ---
+function logAllAnimeViews() {
+    const views = getAnimeViews();
+    if (!window.animeData) {
+        console.log('No animeData loaded.');
+        return;
+    }
+    window.animeData.forEach(anime => {
+        console.log(`${anime.name} (id: ${anime.id}): ${views[anime.id] || 0} views`);
+    });
+}
+function resetAnimeViews() {
+    localStorage.removeItem('animeViews');
+    if (document.getElementById('popular-anime-grid')) {
+        renderPopularAnime();
+    }
+}
+function getAnimeViews() {
+    return JSON.parse(localStorage.getItem('animeViews') || '{}');
+}
+function incrementAnimeView(animeId) {
+    const views = getAnimeViews();
+    views[animeId] = (views[animeId] || 0) + 1;
+    localStorage.setItem('animeViews', JSON.stringify(views));
+}
+function getPopularAnimeList(animeList, topN = 5) {
+    const views = getAnimeViews();
+    // Always include the topN by view count, even if they had 0 views before
+    return [...animeList]
+        .map(a => ({...a, views: views[a.id] || 0}))
+        .sort((a, b) => b.views - a.views || a.name.localeCompare(b.name))
+        .slice(0, topN);
+}
+function renderPopularAnime() {
+    const grid = document.getElementById('popular-anime-grid');
+    if (!grid) return;
+    // Always get the latest animeData and views
+    const animeList = window.animeData;
+    const views = getAnimeViews();
+    // Sort all anime by view count, then name, and take top 5
+    const popular = [...animeList]
+        .map(a => ({...a, views: views[a.id] || 0}))
+        .sort((a, b) => b.views - a.views || a.name.localeCompare(b.name))
+        .slice(0, 5);
+    grid.innerHTML = popular.map((anime, idx) => `
+        <div class="anime-card" style="position:relative;">
+            <a href="pages/anime.html?id=${anime.id}" class="popular-anime-link" data-anime-id="${anime.id}" style="display:block;position:relative;">
+                <img src="${anime.img}" alt="${anime.name}">
+                <div class="rank-bubble">${idx + 1}</div>
+                <div class="views-bubble image-bubble">
+                    <span style="font-size:1.13em;line-height:1;">${anime.views}</span>
+                    <span style="font-size:0.93em;opacity:0.85;">view${anime.views === 1 ? '' : 's'}</span>
+                </div>
+            </a>
+            <div class="info">
+                <div class="title" style="display:flex;align-items:center;gap:8px;">
+                    <a href="pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a>
+                </div>
+                <!-- Description removed for popular anime cards -->
+                ${idx === 0 ? '<div style="margin-top:8px;color:#facc15;font-size:1.1em;">★ Most Popular</div>' : ''}
+            </div>
+        </div>
+    `).join('');
+    // Remove click tracking here: global handler manages all anime links
+}
+
+// --- Global Anime View Tracking ---
+// Track view for any anime card click on the site (not just popular section)
+// --- Global Anime View Tracking ---
+// Track view for any anime card click on the site (not just popular section)
+// --- Global Anime View Tracking ---
+// Track view for any anime card click on the site (not just popular section)
+document.addEventListener('DOMContentLoaded', function animeViewGlobalHandler() {
+    document.body.addEventListener('click', function(e) {
+        // Only handle left-clicks with no modifier keys (to avoid ctrl+click, middle click, etc)
+        if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        let el = e.target;
+        while (el && el !== document.body) {
+            if (el.tagName === 'A' && el.href && el.href.includes('anime.html?id=')) {
+                // Extract id from href
+                const match = el.href.match(/anime.html\?id=([^&#]+)/);
+                if (match && match[1]) {
+                    incrementAnimeView(match[1]);
+                    // If on index page, update popular section
+                    if (document.getElementById('popular-anime-grid')) {
+                        setTimeout(renderPopularAnime, 0);
+                    }
+                }
+                break;
+            }
+            el = el.parentElement;
+        }
+    }, true);
+});
+
+// --- Main DOMContentLoaded Handler ---
 document.addEventListener('DOMContentLoaded', function() {
+    // Suggest Anime Modal/Form Logic
     var openBtn = document.getElementById('open-suggest-form');
     var form = document.getElementById('suggest-anime-form');
     var successMsg = document.getElementById('suggest-success');
@@ -38,8 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-});
-document.addEventListener('DOMContentLoaded', function() {
+
+    // Carousel and Airing Soon
     const animeList = window.animeData;
     const upcoming = animeList.filter(a => a.nextEpisodeDate).sort((a, b) =>
         new Date(a.nextEpisodeDate) - new Date(b.nextEpisodeDate)
@@ -173,4 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         carouselAutoAdvance = false;
         setTimeout(() => { carouselAutoAdvance = true; }, carouselAutoDelay * 2);
     });
+
+    // Render Popular Anime
+    renderPopularAnime();
 });

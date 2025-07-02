@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeRashii Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/header-anime.css">
+    <script src="../js/script.js"></script>
+    <style>
+        .admin-container label,
+        .admin-container b,
+        .admin-container div[style*="font-weight:700"] {
+            color: #e14b4b !important;
+        }
+        .admin-container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fffbe6;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px #ffb6e6aa, 0 2px 8px #ffd16699;
+            padding: 32px 28px 32px 28px;
+        }
+        .admin-title {
+            font-size: 2.1rem;
+            font-family: 'Mochiy Pop One', 'Luckiest Guy', cursive, Arial, sans-serif;
+            color: #ff6f61;
+            margin-bottom: 18px;
+        }
+        .admin-section {
+            margin-bottom: 32px;
+        }
+        .admin-section h2 {
+            color: #e14b4b;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .admin-btn {
+            background: linear-gradient(90deg, #ffd166 0%, #ffb6e6 100%);
+            color: #23233a;
+            font-weight: 800;
+            border: none;
+            border-radius: 18px;
+            padding: 10px 28px;
+            font-size: 1.08rem;
+            margin: 8px 0;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #ffd16699;
+            transition: background 0.18s, color 0.18s;
+        }
+        .admin-btn:hover {
+            background: linear-gradient(90deg, #ffb6e6 0%, #ffd166 100%);
+            color: #ff6f61;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .admin-table th, .admin-table td {
+            border: 1.5px solid #ffd166;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .admin-table th {
+            background: #ffd166;
+            color: #23233a;
+        }
+        .admin-table td {
+            background: #fff;
+        }
+        .admin-warning {
+            color: #e14b4b;
+            font-size: 1.01rem;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="donate-top-cta">
+        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+    </div>
+    <header>
+        <div class="header-anime-bg"></div>
+        <div class="header-content">
+            <h1>AnimeRashii Admin</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="browse.html">Browse</a>
+            </nav>
+        </div>
+    </header>
+    <div class="admin-container">
+        <div class="admin-title">Admin Dashboard</div>
+        <div class="admin-section">
+        <!-- Removed view counts and reset section -->
+        </div>
+        <div class="admin-section">
+        <h2>Add New Anime</h2>
+        <form id="add-anime-form" style="margin-bottom:24px;">
+            <fieldset style="border:1.5px solid #ffd166; border-radius:12px; padding:18px 14px 10px 14px; background:#fff; margin-bottom:18px;">
+                <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Add New Anime</legend>
+                <div style="margin-bottom:8px;"><b>Name:</b><br><input type="text" id="new-anime-name" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;"><b>ID:</b><br><input type="text" id="new-anime-id" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;"><b>Genres</b> <span style="font-size:0.95em; color:#888;">(comma separated)</span>:<br><input type="text" id="new-anime-genres" placeholder="e.g. action, fantasy, drama" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;"><b>Ongoing:</b> <input type="checkbox" id="new-anime-ongoing" style="margin-left:8px;"></div>
+                <div style="margin-bottom:8px;"><b>Image URL:</b><br><input type="text" id="new-anime-img" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;"><b>Description:</b><br><textarea id="new-anime-desc" rows="2" style="width:98%;margin:6px 0 10px 0; border-radius:6px; border:1px solid #ffd166; padding:4px 8px;"></textarea></div>
+                <div style="margin-bottom:8px;"><b>Trailer URL</b> <span style="font-size:0.95em; color:#888;">(optional)</span>:<br><input type="text" id="new-anime-trailer" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></div>
+                <div style="margin-bottom:8px;"><b>Next Episode Date</b> <span style="font-size:0.95em; color:#888;">(optional)</span>:<br><input type="date" id="new-anime-next-ep-date" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166;"></div>
+                <div id="seasons-section" style="margin-top:18px;">
+                    <div style="font-weight:700;color:#e14b4b;margin-bottom:6px;">Seasons:</div>
+                    <div id="seasons-list"></div>
+                    <button type="button" class="admin-btn" id="add-season-btn" style="margin-top:8px;">+ Add Season</button>
+                </div>
+                <br>
+                <button type="submit" class="admin-btn">Add Anime</button>
+                <span id="add-anime-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Anime added (session only)</span>
+            </fieldset>
+        </form>
+        </div>
+    </div>
+    <footer style="margin-top:40px;">
+        &copy; 2025 AnimeRashii. All rights reserved.
+    </footer>
+    <script>
+    // --- Dynamic Seasons/Episodes Form Logic ---
+    const seasonsList = document.getElementById('seasons-list');
+    let seasonCount = 0;
+    function createSeasonBlock(idx) {
+        const div = document.createElement('div');
+        div.className = 'season-block';
+        div.style = 'border:1px solid #ffd166; border-radius:10px; margin-bottom:14px; padding:10px 8px; background:#fff9e6;';
+        div.innerHTML = `
+            <label>Title: <input type="text" class="season-title" required style="margin:0 10px 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166;"></label>
+            <label>Episodes: <input type="number" min="0" class="season-episodes" value="0" style="margin:0 10px 10px 0; width:60px; border-radius:6px; border:1px solid #ffd166;"></label>
+            <button type="button" class="admin-btn remove-season-btn" style="padding:2px 12px; font-size:0.95rem; margin-bottom:8px;">Remove</button>
+        `;
+        // Remove button logic
+        div.querySelector('.remove-season-btn').onclick = function() {
+            div.remove();
+        };
+        return div;
+    }
+    document.getElementById('add-season-btn').onclick = function() {
+        seasonsList.appendChild(createSeasonBlock(++seasonCount));
+    };
+    // --- Add Anime Submit Handler (API) ---
+    document.getElementById('add-anime-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('new-anime-name').value.trim();
+        const id = document.getElementById('new-anime-id').value.trim();
+        const genres = document.getElementById('new-anime-genres').value.split(',').map(g => g.trim()).filter(Boolean);
+        const ongoing = document.getElementById('new-anime-ongoing').checked;
+        const img = document.getElementById('new-anime-img').value.trim();
+        const desc = document.getElementById('new-anime-desc').value.trim();
+        const trailer = document.getElementById('new-anime-trailer').value.trim();
+        const nextEpDate = document.getElementById('new-anime-next-ep-date').value;
+        // Seasons
+        const seasonBlocks = Array.from(document.querySelectorAll('.season-block'));
+        const seasons = seasonBlocks.map(block => {
+            const title = block.querySelector('.season-title').value.trim() || "Season";
+            const episodes = parseInt(block.querySelector('.season-episodes').value, 10) || 0;
+            return { title, episodes, videos: [], videosDub: [], videosFrSub: [], videosFrDub: [] };
+        });
+        if (!name || !id) return;
+        // Check for duplicate name or id via API
+        let warn = document.getElementById('add-anime-warning');
+        if (!warn) {
+            warn = document.createElement('div');
+            warn.id = 'add-anime-warning';
+            warn.className = 'admin-warning';
+            this.querySelector('fieldset').appendChild(warn);
+        }
+        // Fetch all anime to check for duplicates
+        const animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        const duplicate = animeList.some(anime => anime.id === id || anime.name.toLowerCase() === name.toLowerCase());
+        if (duplicate) {
+            warn.textContent = 'Anime with this name or ID already exists. Meant to add a new episode? Use the other form.';
+            warn.style.display = 'block';
+            return;
+        } else {
+            warn.textContent = '';
+            warn.style.display = 'none';
+        }
+        // Add to backend
+        const animeObj = { id, name, desc, img, genres, seasons, ongoing };
+        if (trailer) animeObj.trailer = trailer;
+        if (nextEpDate) animeObj.nextEpisodeDate = nextEpDate;
+        const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(animeObj)
+        });
+        if (resp.ok) {
+            document.getElementById('add-anime-success').style.display = 'inline';
+            setTimeout(() => { document.getElementById('add-anime-success').style.display = 'none'; }, 2000);
+            this.reset();
+            seasonsList.innerHTML = '';
+            renderAdminAnimeTable();
+        } else {
+            warn.textContent = 'Failed to add anime (server error).';
+            warn.style.display = 'block';
+        }
+    });
+    // Populate anime list table from backend
+    async function renderAdminAnimeTable() {
+        const tbody = document.querySelector('#admin-anime-table tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        const animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        animeList.forEach(anime => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${anime.name}</td><td>${anime.id}</td><td>${(anime.genres||[]).join(', ')}</td><td>${anime.ongoing ? 'Yes' : 'No'}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAdminAnimeTable();
+    });
+    </script>
+</body>
+</html>

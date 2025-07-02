@@ -122,153 +122,132 @@
     <footer>
         &copy; 2025 AnimeRashii. All rights reserved.
     </footer>
-    <script src="../js/animeData.js"></script>
+    <script src="../js/script.js"></script>
     <script>
-        // Anime list with genres
-        const animeList = window.animeData;
-
-        // Render all anime
-        function renderAnimeGrid(list) {
-            const grid = document.getElementById('anime-grid');
-            grid.innerHTML = list.map(anime => `
-                <div class="anime-card">
+    // --- Backend Anime Data Fetch/Render ---
+    let animeList = [];
+    async function fetchAnimeList() {
+        const res = await fetch('https://my-anime-l74v.onrender.com/api/anime');
+        animeList = await res.json();
+        renderAnimeGrid(animeList);
+    }
+    function renderAnimeGrid(list) {
+        const grid = document.getElementById('anime-grid');
+        grid.innerHTML = list.map(anime => `
+            <div class="anime-card">
+                <a href="../pages/anime.html?id=${anime.id}">
+                    <img src="${anime.img}" alt="${anime.name}">
+                </a>
+                <div class="info">
+                    <div class="title"><a href="../pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
+                </div>
+            </div>
+        `).join('');
+    }
+    // Levenshtein distance for fuzzy search
+    function levenshtein(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+    function findClosestAnimeList(query, list = animeList) {
+        if (!query) return list;
+        let matches = list.filter(anime => anime.name.toLowerCase().startsWith(query));
+        if (matches.length > 0) return matches;
+        let scored = list.map(anime => ({
+            ...anime,
+            score: levenshtein(query, anime.name.toLowerCase())
+        }));
+        scored.sort((a, b) => a.score - b.score);
+        return scored.slice(0, 3).filter(anime => anime.score <= 5);
+    }
+    const browseBar = document.getElementById('browse-bar');
+    const genreSelect = document.getElementById('genre-select');
+    const suggestionDiv = document.getElementById('browse-suggestion');
+    const genresLink = document.getElementById('genres-link');
+    const genresDropdown = document.getElementById('genres-dropdown');
+    browseBar.addEventListener('input', function() { filterAndRender(); });
+    genreSelect.addEventListener('change', function() { filterAndRender(); });
+    genresLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        genresDropdown.style.display = genresDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    Array.from(document.querySelectorAll('#genres-dropdown a')).forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const genre = this.getAttribute('href').split('genre=')[1];
+            genreSelect.value = genre || "";
+            filterAndRender();
+            genresDropdown.style.display = 'none';
+        });
+    });
+    function filterAndRender() {
+        const query = browseBar.value.trim().toLowerCase();
+        const genre = genreSelect.value;
+        let filtered = animeList;
+        if (genre) {
+            filtered = filtered.filter(anime => anime.genres.map(g => g.toLowerCase()).includes(genre));
+        }
+        if (query) {
+            filtered = findClosestAnimeList(query, filtered);
+        }
+        renderAnimeGrid(filtered);
+        if (query) {
+            if (filtered.length > 0) {
+                suggestionDiv.innerHTML = filtered.map(anime => `
                     <a href="../pages/anime.html?id=${anime.id}">
                         <img src="${anime.img}" alt="${anime.name}">
+                        <span style="font-weight:bold;">${anime.name}</span>
                     </a>
-                    <div class="info">
-                        <div class="title"><a href="../pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        renderAnimeGrid(animeList);
-
-        // Levenshtein distance for fuzzy search
-        function levenshtein(a, b) {
-            const matrix = [];
-            for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-            for (let i = 1; i <= b.length; i++) {
-                for (let j = 1; j <= a.length; j++) {
-                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                        matrix[i][j] = matrix[i - 1][j - 1];
-                    } else {
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j - 1] + 1,
-                            matrix[i][j - 1] + 1,
-                            matrix[i - 1][j] + 1
-                        );
-                    }
-                }
-            }
-            return matrix[b.length][a.length];
-        }
-
-        function findClosestAnimeList(query, list = animeList) {
-            if (!query) return list;
-            let matches = list.filter(anime => anime.name.toLowerCase().startsWith(query));
-            if (matches.length > 0) return matches;
-            let scored = list.map(anime => ({
-                ...anime,
-                score: levenshtein(query, anime.name.toLowerCase())
-            }));
-            scored.sort((a, b) => a.score - b.score);
-            return scored.slice(0, 3).filter(anime => anime.score <= 5);
-        }
-
-        const browseBar = document.getElementById('browse-bar');
-        const genreSelect = document.getElementById('genre-select');
-        const suggestionDiv = document.getElementById('browse-suggestion');
-        const genresLink = document.getElementById('genres-link');
-        const genresDropdown = document.getElementById('genres-dropdown');
-
-        browseBar.addEventListener('input', function() {
-            filterAndRender();
-        });
-        genreSelect.addEventListener('change', function() {
-            filterAndRender();
-        });
-        genresLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            genresDropdown.style.display = genresDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Sync nav dropdown with genre selector
-        Array.from(document.querySelectorAll('#genres-dropdown a')).forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const genre = this.getAttribute('href').split('genre=')[1];
-                // Set the selector value and trigger filtering
-                genreSelect.value = genre || "";
-                filterAndRender();
-                genresDropdown.style.display = 'none';
-            });
-        });
-
-        function filterAndRender() {
-            const query = browseBar.value.trim().toLowerCase();
-            const genre = genreSelect.value;
-            let filtered = animeList;
-
-            // Filter by genre if selected
-            if (genre) {
-                filtered = filtered.filter(anime => anime.genres.map(g => g.toLowerCase()).includes(genre));
-            }
-
-            // Filter by search query if present
-            if (query) {
-                filtered = findClosestAnimeList(query, filtered);
-            }
-
-            renderAnimeGrid(filtered);
-
-            // Update suggestion popup for search
-            if (query) {
-                if (filtered.length > 0) {
-                    suggestionDiv.innerHTML = filtered.map(anime => `
-                        <a href="../pages/anime.html?id=${anime.id}">
-                            <img src="${anime.img}" alt="${anime.name}">
-                            <span style="font-weight:bold;">${anime.name}</span>
-                        </a>
-                    `).join('');
-                    suggestionDiv.classList.add('active');
-                } else {
-                    suggestionDiv.innerHTML = `<div style="padding:10px 0;color:#ffd166;">No match found.</div>`;
-                    suggestionDiv.classList.add('active');
-                }
+                `).join('');
+                suggestionDiv.classList.add('active');
             } else {
-                suggestionDiv.innerHTML = '';
-                suggestionDiv.classList.remove('active');
+                suggestionDiv.innerHTML = `<div style="padding:10px 0;color:#ffd166;">No match found.</div>`;
+                suggestionDiv.classList.add('active');
             }
+        } else {
+            suggestionDiv.innerHTML = '';
+            suggestionDiv.classList.remove('active');
         }
-
-        // Hide popup when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!browseBar.contains(e.target) && !suggestionDiv.contains(e.target) && !genreSelect.contains(e.target)) {
-                suggestionDiv.classList.remove('active');
-            }
-        });
-        browseBar.addEventListener('focus', function() {
-            if (suggestionDiv.innerHTML.trim()) suggestionDiv.classList.add('active');
-        });
-
-        // Hide genres dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!genresLink.contains(e.target) && !genresDropdown.contains(e.target)) {
-                genresDropdown.style.display = 'none';
-            }
-        });
-
-        // Get genre from URL and apply filter on page load
-        function getParam(name) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(name);
+    }
+    document.addEventListener('click', function(e) {
+        if (!browseBar.contains(e.target) && !suggestionDiv.contains(e.target) && !genreSelect.contains(e.target)) {
+            suggestionDiv.classList.remove('active');
         }
-        const urlGenre = getParam('genre');
+    });
+    browseBar.addEventListener('focus', function() {
+        if (suggestionDiv.innerHTML.trim()) suggestionDiv.classList.add('active');
+    });
+    document.addEventListener('click', function(e) {
+        if (!genresLink.contains(e.target) && !genresDropdown.contains(e.target)) {
+            genresDropdown.style.display = 'none';
+        }
+    });
+    function getParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+    }
+    const urlGenre = getParam('genre');
+    fetchAnimeList().then(() => {
         if (urlGenre) {
             genreSelect.value = urlGenre.toLowerCase();
             filterAndRender();
         }
+    });
     </script>
 </body>
 </html>
