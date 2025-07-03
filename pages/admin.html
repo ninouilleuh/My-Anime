@@ -730,8 +730,7 @@
                 .replace(/^-+|-+$/g, '');
             idPreview.textContent = id ? `ID: ${id}` : '';
         });
-        // Populate anime/season selects for add-episode form
-        populateAnimeSelect();
+        // No longer need to call populateAnimeSelect (removed)
     });
     // Simple translations for English and French
     const translations = {
