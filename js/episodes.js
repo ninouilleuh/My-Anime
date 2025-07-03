@@ -1,6 +1,6 @@
 
-// Fetch animeData.json and run the rest of the logic after loading
-fetch('../animeData.json')
+// Fetch anime data from the server API and run the rest of the logic after loading
+fetch('https://my-anime-l74v.onrender.com/api/anime')
   .then(res => res.json())
   .then(animeList => {
     function getParam(name) {
