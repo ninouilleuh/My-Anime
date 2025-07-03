@@ -363,7 +363,17 @@
             this.querySelector('fieldset').appendChild(warn);
         }
         // Fetch all anime to check for duplicates
-        const animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        let animeList = [];
+        try {
+            animeList = await fetch('/api/anime').then(r => {
+                if (!r.ok) throw new Error('Failed to fetch anime list');
+                return r.json();
+            });
+        } catch (e) {
+            warn.textContent = 'Failed to fetch anime list (server error).';
+            warn.style.display = 'block';
+            return;
+        }
         const duplicate = animeList.some(anime => anime.id === id || anime.name.toLowerCase() === name.toLowerCase());
         if (duplicate) {
             warn.textContent = 'Anime with this name or ID already exists. Meant to add a new episode? Use the other form.';
@@ -377,7 +387,7 @@
         const animeObj = { id, name, desc, img, genres, seasons, ongoing };
         if (trailer) animeObj.trailer = trailer;
         if (nextEpDate) animeObj.nextEpisodeDate = nextEpDate;
-        const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime', {
+        const resp = await fetch('/api/anime', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(animeObj)
@@ -398,7 +408,16 @@
         const tbody = document.querySelector('#admin-anime-table tbody');
         if (!tbody) return;
         tbody.innerHTML = '';
-        const animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        let animeList = [];
+        try {
+            animeList = await fetch('/api/anime').then(r => {
+                if (!r.ok) throw new Error('Failed to fetch anime list');
+                return r.json();
+            });
+        } catch (e) {
+            // Optionally show error to user
+            return;
+        }
         animeList.forEach(anime => {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td>${anime.name}</td><td>${anime.id}</td><td>${(anime.genres||[]).join(', ')}</td><td>${anime.ongoing ? 'Yes' : 'No'}</td>`;
@@ -441,7 +460,16 @@
 
     async function populateEditAnimeSelect() {
         editAnimeSelect.innerHTML = '';
-        animeDataCache = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        try {
+            animeDataCache = await fetch('/api/anime').then(r => {
+                if (!r.ok) throw new Error('Failed to fetch anime list');
+                return r.json();
+            });
+        } catch (e) {
+            animeDataCache = [];
+            // Optionally show error to user
+            return;
+        }
         animeDataCache.forEach(anime => {
             const opt = document.createElement('option');
             opt.value = anime.id;
@@ -491,7 +519,7 @@
         updatedAnime.ongoing = editAnimeOngoing.checked;
         updatedAnime.trailer = editAnimeTrailer.value.trim();
         // PATCH only the changed fields
-        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+        const resp = await fetch(`/api/anime/${animeId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ongoing: updatedAnime.ongoing, trailer: updatedAnime.trailer })
@@ -551,7 +579,7 @@
             }
         }
         // Send PATCH to backend
-        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+        const resp = await fetch(`/api/anime/${animeId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ seasons: updatedAnime.seasons })
