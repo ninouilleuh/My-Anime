@@ -581,26 +581,70 @@
         e.preventDefault();
         const animeId = editAnimeSelect.value;
         const action = editAnimeForm.querySelector('input[name="add-action"]:checked').value;
+        // Always refresh animeDataCache before making changes to avoid stale data
+        try {
+            animeDataCache = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
+        } catch (e) {
+            addEpisodeSuccess.textContent = 'Failed to fetch latest anime data.';
+            addEpisodeSuccess.style.color = '#e14b4b';
+            addEpisodeSuccess.style.display = 'inline';
+            setTimeout(() => { addEpisodeSuccess.style.display = 'none'; }, 3500);
+            return;
+        }
         let updatedAnime = animeDataCache.find(a => a.id === animeId);
         if (!updatedAnime) return;
         if (action === 'season') {
             // Add new season
             const title = document.getElementById('new-season-title').value.trim() || `Season ${updatedAnime.seasons.length+1}`;
-            const episodes = parseInt(document.getElementById('new-season-episodes').value, 10) || 1;
-            updatedAnime.seasons.push({ title, episodes, videos: [], videosDub: [], videosFrSub: [], videosFrDub: [] });
+            let episodes = parseInt(document.getElementById('new-season-episodes').value, 10);
+            if (!episodes || episodes < 1) episodes = 1;
+            updatedAnime.seasons.push({
+                title,
+                episodes,
+                videos: Array(episodes).fill(''),
+                videosDub: Array(episodes).fill(''),
+                videosFrSub: Array(episodes).fill(''),
+                videosFrDub: Array(episodes).fill('')
+            });
+            // PATCH to backend and refresh selects so user can add episodes to new season immediately
+            const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seasons: updatedAnime.seasons })
+            });
+            let statusMsg = addEpisodeSuccess;
+            if (resp.ok) {
+                statusMsg.textContent = 'Season added!';
+                statusMsg.style.color = '#16a34a';
+                statusMsg.style.display = 'inline';
+                setTimeout(() => { statusMsg.style.display = 'none'; }, 2000);
+                await populateEditAnimeSelect();
+                // Select the new season automatically
+                existingSeasonSelect.selectedIndex = updatedAnime.seasons.length - 1;
+                updateEpisodeLinksInputs();
+            } else {
+                statusMsg.textContent = 'Failed to add season (server error).';
+                statusMsg.style.color = '#e14b4b';
+                statusMsg.style.display = 'inline';
+                setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
+            }
+            return;
         } else {
             // Add episode to existing season (update all video links from form)
             const seasonIdx = parseInt(existingSeasonSelect.value, 10);
             const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
             if (updatedAnime.seasons[seasonIdx]) {
-                // Update episode count
                 updatedAnime.seasons[seasonIdx].episodes = newEpCount;
-                // Collect ALL links from the form (overwrite all)
+                // Ensure all video arrays exist and are the correct length
+                if (!Array.isArray(updatedAnime.seasons[seasonIdx].videos)) updatedAnime.seasons[seasonIdx].videos = Array(newEpCount).fill('');
+                if (!Array.isArray(updatedAnime.seasons[seasonIdx].videosDub)) updatedAnime.seasons[seasonIdx].videosDub = Array(newEpCount).fill('');
+                if (!Array.isArray(updatedAnime.seasons[seasonIdx].videosFrSub)) updatedAnime.seasons[seasonIdx].videosFrSub = Array(newEpCount).fill('');
+                if (!Array.isArray(updatedAnime.seasons[seasonIdx].videosFrDub)) updatedAnime.seasons[seasonIdx].videosFrDub = Array(newEpCount).fill('');
                 const prev = {
-                    videos: [],
-                    videosDub: [],
-                    videosFrSub: [],
-                    videosFrDub: [],
+                    videos: updatedAnime.seasons[seasonIdx].videos,
+                    videosDub: updatedAnime.seasons[seasonIdx].videosDub,
+                    videosFrSub: updatedAnime.seasons[seasonIdx].videosFrSub,
+                    videosFrDub: updatedAnime.seasons[seasonIdx].videosFrDub,
                     prevCount: 0
                 };
                 const links = collectEpisodeLinksInputs(newEpCount, prev);
@@ -609,27 +653,26 @@
                 updatedAnime.seasons[seasonIdx].videosFrSub = links.videosFrSub;
                 updatedAnime.seasons[seasonIdx].videosFrDub = links.videosFrDub;
             }
-        }
-        // Send PATCH to backend
-        console.log("animeId used in PATCH:", animeId);
-        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ seasons: updatedAnime.seasons })
-        });
-        let statusMsg = addEpisodeSuccess;
-        if (resp.ok) {
-            statusMsg.textContent = 'Update successful';
-            statusMsg.style.color = '#16a34a';
-            statusMsg.style.display = 'inline';
-            setTimeout(() => { statusMsg.style.display = 'none'; }, 2000);
-            await populateEditAnimeSelect();
-            updateEpisodeLinksInputs();
-        } else {
-            statusMsg.textContent = 'Failed to update (server error).';
-            statusMsg.style.color = '#e14b4b';
-            statusMsg.style.display = 'inline';
-            setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
+            // PATCH to backend
+            const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seasons: updatedAnime.seasons })
+            });
+            let statusMsg = addEpisodeSuccess;
+            if (resp.ok) {
+                statusMsg.textContent = 'Update successful';
+                statusMsg.style.color = '#16a34a';
+                statusMsg.style.display = 'inline';
+                setTimeout(() => { statusMsg.style.display = 'none'; }, 2000);
+                await populateEditAnimeSelect();
+                updateEpisodeLinksInputs();
+            } else {
+                statusMsg.textContent = 'Failed to update (server error).';
+                statusMsg.style.color = '#e14b4b';
+                statusMsg.style.display = 'inline';
+                setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
+            }
         }
     });
 
