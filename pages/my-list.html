@@ -35,21 +35,60 @@
         const myList = JSON.parse(localStorage.getItem('myAnimeList') || '[]');
         const grid = document.getElementById('my-list-grid');
         if (myList.length === 0) {
-            grid.innerHTML = "<p style='color:#ffd166;'>You haven't started any anime yet.</p>";
+            grid.innerHTML = "<p style='color:#ffd166;' data-i18n='noAnime'>You haven't started any anime yet.</p>";
         } else {
             grid.innerHTML = myList.map(anime => {
                 const ep = anime.episode || 1;
                 return `
-                    <div class="anime-card">
-                        <a href="episodes.html?id=${anime.id}&episode=${ep}">
-                            <img src="${anime.img}" alt="${anime.name}">
-                            <div class="title">${anime.name}</div>
-                            <div class="last-watched">Last watched: Episode ${ep}</div>
-                        </a>
-                    </div>
-                `;
+                    <div class=\"anime-card\">\n                        <a href=\"episodes.html?id=${anime.id}&episode=${ep}\">\n                            <img src=\"${anime.img}\" alt=\"${anime.name}\">\n                            <div class=\"title\">${anime.name}</div>\n                            <div class=\"last-watched\" data-i18n='lastWatched'>Last watched: Episode ${ep}</div>\n                        </a>\n                    </div>\n                `;
             }).join('');
         }
+        // Simple translations for English and French
+        const translations = {
+          en: {
+            donate: '💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a>',
+            home: 'Home',
+            browse: 'Browse',
+            myList: 'My List',
+            yourAnime: 'Your Anime',
+            noAnime: "You haven't started any anime yet.",
+            lastWatched: (ep) => `Last watched: Episode ${ep}`,
+            copyright: '&copy; 2025 AnimeRashii. All rights reserved.'
+          },
+          fr: {
+            donate: '💖 Aidez-nous à survivre ! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Faire un don</a>',
+            home: 'Accueil',
+            browse: 'Explorer',
+            myList: 'Ma liste',
+            yourAnime: 'Vos animes',
+            noAnime: "Vous n'avez commencé aucun anime.",
+            lastWatched: (ep) => `Dernier visionnage : Épisode ${ep}`,
+            copyright: '&copy; 2025 AnimeRashii. Tous droits réservés.'
+          }
+        };
+
+        function setLanguage(lang) {
+          localStorage.setItem('siteLang', lang);
+          document.querySelector('[data-i18n="donate"]').innerHTML = translations[lang].donate;
+          document.querySelector('[data-i18n="home"]').textContent = translations[lang].home;
+          document.querySelector('[data-i18n="browse"]').textContent = translations[lang].browse;
+          document.querySelector('[data-i18n="myList"]').textContent = translations[lang].myList;
+          document.querySelector('[data-i18n="yourAnime"]').textContent = translations[lang].yourAnime;
+          document.querySelector('[data-i18n="copyright"]').innerHTML = translations[lang].copyright;
+          const noAnime = document.querySelector('[data-i18n="noAnime"]');
+          if (noAnime) noAnime.textContent = translations[lang].noAnime;
+          document.querySelectorAll('.last-watched').forEach((el) => {
+            const match = el.textContent.match(/Episode (\d+)/);
+            if (match) el.textContent = translations[lang].lastWatched(match[1]);
+          });
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+          const savedLang = localStorage.getItem('siteLang') || 'en';
+          setLanguage(savedLang);
+          document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+          document.getElementById('lang-fr').addEventListener('click', function() { setLanguage('fr'); });
+        });
     </script>
 </body>
 </html>

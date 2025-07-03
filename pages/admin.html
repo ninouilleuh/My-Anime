@@ -74,6 +74,42 @@
             font-size: 1.01rem;
             margin-top: 8px;
         }
+        .lang-switcher {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .lang-btn {
+          background: #23233a;
+          color: #ffd166;
+          font-weight: 700;
+          border: 2px solid #ffd166;
+          border-radius: 16px;
+          padding: 7px 18px;
+          font-size: 1rem;
+          cursor: pointer;
+          box-shadow: 0 0 8px 0 #ffd16655, 0 2px 8px rgba(0,0,0,0.10);
+          transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s, transform 0.12s;
+          outline: none;
+          margin: 0;
+          letter-spacing: 1px;
+          text-shadow: 0 1px 4px #23233a88;
+        }
+        .lang-btn.active, .lang-btn:focus {
+          background: #ffd166;
+          color: #23233a;
+          border-color: #ff6e7f;
+          box-shadow: 0 0 16px 2px #ff6e7f99, 0 2px 8px rgba(0,0,0,0.10);
+          transform: scale(1.08);
+          z-index: 1;
+        }
+        .lang-btn:hover:not(.active) {
+          background: #2e2e4d;
+          color: #fff;
+          border-color: #bfe9ff;
+          box-shadow: 0 0 12px 1px #bfe9ff88, 0 2px 8px rgba(0,0,0,0.10);
+          transform: scale(1.04);
+        }
     </style>
 </head>
 <body>
@@ -88,15 +124,19 @@
         </div>
     </div>
     <div class="donate-top-cta">
-        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+        <span data-i18n="donate">💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
     </div>
     <header>
         <div class="header-anime-bg"></div>
         <div class="header-content">
             <h1>AnimeRashii Admin</h1>
+            <div class="lang-switcher" style="position:absolute;top:18px;right:24px;z-index:300;">
+                <button id="lang-en" class="lang-btn">EN</button>
+                <button id="lang-fr" class="lang-btn">FR</button>
+            </div>
             <nav>
-                <a href="../index.html">Home</a>
-                <a href="browse.html">Browse</a>
+                <a href="../index.html" data-i18n="home">Home</a>
+                <a href="browse.html" data-i18n="browse">Browse</a>
             </nav>
         </div>
     </header>
@@ -147,14 +187,24 @@
         </div>
 
         <div class="admin-section">
-        <h2>Add Season or Episode to Existing Anime</h2>
-        <form id="add-episode-form" style="margin-bottom:24px;">
+        <h2>Edit Existing Anime / Add Season or Episode</h2>
+        <form id="edit-anime-form" style="margin-bottom:24px;">
             <fieldset style="border:1.5px solid #ffd166; border-radius:12px; padding:18px 14px 10px 14px; background:#fff; margin-bottom:18px;">
-                <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Add Season/Episode</legend>
+                <legend style="color:#e14b4b;font-weight:700;font-size:1.08rem;">Edit Anime / Add Season/Episode</legend>
                 <div style="margin-bottom:8px;">
                   <b>Select Anime:</b><br>
-                  <select id="existing-anime-select" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select>
+                  <select id="edit-anime-select" required style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select>
                 </div>
+                <div style="margin-bottom:8px;">
+                  <b>Ongoing:</b> <input type="checkbox" id="edit-anime-ongoing" style="margin-left:8px;">
+                </div>
+                <div style="margin-bottom:8px;">
+                  <b>Trailer URL</b> <span style="font-size:0.95em; color:#888;">(optional)</span>:<br>
+                  <input type="text" id="edit-anime-trailer" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
+                </div>
+                <button type="button" class="admin-btn" id="edit-anime-update-btn">Update Anime</button>
+                <span id="edit-anime-success" style="color:#16a34a;font-weight:700;margin-left:12px;display:none;">Anime updated!</span>
+                <hr style="margin:18px 0;">
                 <div style="margin-bottom:8px;">
                   <b>Action:</b><br>
                   <label><input type="radio" name="add-action" value="season" checked> Add New Season</label>
@@ -177,7 +227,7 @@
         </div>
     </div>
     <footer style="margin-top:40px;">
-        &copy; 2025 AnimeRashii. All rights reserved.
+        <span data-i18n="copyright">&copy; 2025 AnimeRashii. All rights reserved.</span>
     </footer>
     <script>
     // --- Admin Password Protection Overlay + F12 Restriction ---
@@ -376,42 +426,85 @@
             idPreview.textContent = id ? `ID: ${id}` : '';
         });
     });
-    // --- Add Season/Episode Form Logic ---
-    const addEpisodeForm = document.getElementById('add-episode-form');
-    const animeSelect = document.getElementById('existing-anime-select');
-    const seasonSelect = document.getElementById('existing-season-select');
+    // --- Edit Anime / Add Season/Episode Form Logic ---
+    const editAnimeForm = document.getElementById('edit-anime-form');
+    const editAnimeSelect = document.getElementById('edit-anime-select');
+    const editAnimeOngoing = document.getElementById('edit-anime-ongoing');
+    const editAnimeTrailer = document.getElementById('edit-anime-trailer');
+    const editAnimeUpdateBtn = document.getElementById('edit-anime-update-btn');
+    const editAnimeSuccess = document.getElementById('edit-anime-success');
     const addSeasonFields = document.getElementById('add-season-fields');
     const addEpisodeFields = document.getElementById('add-episode-fields');
+    const existingSeasonSelect = document.getElementById('existing-season-select');
     const addEpisodeSuccess = document.getElementById('add-episode-success');
     let animeDataCache = [];
 
-    async function populateAnimeSelect() {
-        animeSelect.innerHTML = '';
+    async function populateEditAnimeSelect() {
+        editAnimeSelect.innerHTML = '';
         animeDataCache = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => r.json());
         animeDataCache.forEach(anime => {
             const opt = document.createElement('option');
             opt.value = anime.id;
             opt.textContent = anime.name;
-            animeSelect.appendChild(opt);
+            editAnimeSelect.appendChild(opt);
         });
-        populateSeasonSelect();
+        updateEditAnimeFields();
+        populateExistingSeasonSelect();
     }
 
-    function populateSeasonSelect() {
-        seasonSelect.innerHTML = '';
-        const anime = animeDataCache.find(a => a.id === animeSelect.value);
+    function updateEditAnimeFields() {
+        const anime = animeDataCache.find(a => a.id === editAnimeSelect.value);
+        if (!anime) return;
+        editAnimeOngoing.checked = !!anime.ongoing;
+        editAnimeTrailer.value = anime.trailer || '';
+        // If "Add Episode to Existing Season" is selected, update episode links fields
+        if (editAnimeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
+        }
+    }
+
+    function populateExistingSeasonSelect() {
+        existingSeasonSelect.innerHTML = '';
+        const anime = animeDataCache.find(a => a.id === editAnimeSelect.value);
         if (!anime || !anime.seasons) return;
         anime.seasons.forEach((season, idx) => {
             const opt = document.createElement('option');
             opt.value = idx;
             opt.textContent = season.title || `Season ${idx+1}`;
-            seasonSelect.appendChild(opt);
+            existingSeasonSelect.appendChild(opt);
         });
+        // If "Add Episode to Existing Season" is selected, update episode links fields
+        if (editAnimeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
+        }
     }
 
-    animeSelect.addEventListener('change', populateSeasonSelect);
+    editAnimeSelect.addEventListener('change', () => {
+        updateEditAnimeFields();
+        populateExistingSeasonSelect();
+    });
 
-    addEpisodeForm.querySelectorAll('input[name="add-action"]').forEach(radio => {
+    editAnimeUpdateBtn.addEventListener('click', async function() {
+        const animeId = editAnimeSelect.value;
+        let updatedAnime = animeDataCache.find(a => a.id === animeId);
+        if (!updatedAnime) return;
+        updatedAnime.ongoing = editAnimeOngoing.checked;
+        updatedAnime.trailer = editAnimeTrailer.value.trim();
+        // PATCH only the changed fields
+        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ongoing: updatedAnime.ongoing, trailer: updatedAnime.trailer })
+        });
+        if (resp.ok) {
+            editAnimeSuccess.style.display = 'inline';
+            setTimeout(() => { editAnimeSuccess.style.display = 'none'; }, 2000);
+            await populateEditAnimeSelect();
+        }
+    });
+
+    // --- Add Season/Episode logic (reuse existing code, but use editAnimeSelect)
+    editAnimeForm.querySelectorAll('input[name="add-action"]').forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.value === 'season') {
                 addSeasonFields.style.display = '';
@@ -424,10 +517,10 @@
         });
     });
 
-    addEpisodeForm.addEventListener('submit', async function(e) {
+    editAnimeForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const animeId = animeSelect.value;
-        const action = addEpisodeForm.querySelector('input[name="add-action"]:checked').value;
+        const animeId = editAnimeSelect.value;
+        const action = editAnimeForm.querySelector('input[name="add-action"]:checked').value;
         let updatedAnime = animeDataCache.find(a => a.id === animeId);
         if (!updatedAnime) return;
         if (action === 'season') {
@@ -436,20 +529,19 @@
             const episodes = parseInt(document.getElementById('new-season-episodes').value, 10) || 1;
             updatedAnime.seasons.push({ title, episodes, videos: [], videosDub: [], videosFrSub: [], videosFrDub: [] });
         } else {
-            // Add episode to existing season (append only new links)
-            const seasonIdx = parseInt(seasonSelect.value, 10);
+            // Add episode to existing season (update all video links from form)
+            const seasonIdx = parseInt(existingSeasonSelect.value, 10);
             const newEpCount = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
             if (updatedAnime.seasons[seasonIdx]) {
                 // Update episode count
-                const prevCount = updatedAnime.seasons[seasonIdx].episodes || 0;
                 updatedAnime.seasons[seasonIdx].episodes = newEpCount;
-                // Collect links for new episodes only, preserve old
+                // Collect ALL links from the form (overwrite all)
                 const prev = {
-                    videos: (updatedAnime.seasons[seasonIdx].videos||[]).slice(),
-                    videosDub: (updatedAnime.seasons[seasonIdx].videosDub||[]).slice(),
-                    videosFrSub: (updatedAnime.seasons[seasonIdx].videosFrSub||[]).slice(),
-                    videosFrDub: (updatedAnime.seasons[seasonIdx].videosFrDub||[]).slice(),
-                    prevCount
+                    videos: [],
+                    videosDub: [],
+                    videosFrSub: [],
+                    videosFrDub: [],
+                    prevCount: 0
                 };
                 const links = collectEpisodeLinksInputs(newEpCount, prev);
                 updatedAnime.seasons[seasonIdx].videos = links.videos;
@@ -464,20 +556,29 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ seasons: updatedAnime.seasons })
         });
+        let statusMsg = addEpisodeSuccess;
         if (resp.ok) {
-            addEpisodeSuccess.style.display = 'inline';
-            setTimeout(() => { addEpisodeSuccess.style.display = 'none'; }, 2000);
-            await populateAnimeSelect();
+            statusMsg.textContent = 'Update successful';
+            statusMsg.style.color = '#16a34a';
+            statusMsg.style.display = 'inline';
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 2000);
+            await populateEditAnimeSelect();
             updateEpisodeLinksInputs();
+        } else {
+            statusMsg.textContent = 'Failed to update (server error).';
+            statusMsg.style.color = '#e14b4b';
+            statusMsg.style.display = 'inline';
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
         }
     });
+
     // --- Dynamic Episode Links Inputs ---
     function updateEpisodeLinksInputs() {
         const container = document.getElementById('episode-links-container');
         container.innerHTML = '';
         const count = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
-        const animeId = animeSelect.value;
-        const seasonIdx = parseInt(seasonSelect.value, 10);
+        const animeId = editAnimeSelect.value;
+        const seasonIdx = parseInt(existingSeasonSelect.value, 10);
         const anime = animeDataCache.find(a => a.id === animeId);
         const season = anime && anime.seasons && anime.seasons[seasonIdx];
         // Use existing links if present
@@ -489,15 +590,99 @@
         for (let i = 0; i < count; i++) {
             const block = document.createElement('div');
             block.className = 'episode-links-block';
-            block.style = 'border:1px solid #ffd166; border-radius:8px; margin-bottom:10px; padding:8px 6px; background:#fff9e6;';
-            // If this is an existing episode, prefill and make readonly
-            const isExisting = i < prevEpCount;
+            block.style = 'border:1.5px solid #ffd166; border-radius:8px; margin-bottom:10px; padding:8px 6px; background:#fff9e6;';
+            // If this is an existing episode, prefill but allow editing
             block.innerHTML = `
-                <div style="font-weight:700;color:#e14b4b;margin-bottom:4px;">Episode ${i+1} Links:</div>
-                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" value="${existingVideos[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" value="${existingVideosDub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" value="${existingVideosFrSub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
-                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" value="${existingVideosFrDub[i]||''}" ${isExisting ? 'readonly style=\"background:#eee;\"' : ''} style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <div style="font-weight:700;color:#e14b4b;margin-bottom:4px;">Episode ${i+1} Video URLs:</div>
+                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" value="${existingVideos[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" value="${existingVideosDub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" value="${existingVideosFrSub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" value="${existingVideosFrDub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+            `;
+            container.appendChild(block);
+        }
+    }
+
+    function collectEpisodeLinksInputs(count, prev) {
+        // prev: {videos, videosDub, videosFrSub, videosFrDub, prevCount}
+        const videos = prev && prev.videos ? prev.videos.slice() : [];
+        const videosDub = prev && prev.videosDub ? prev.videosDub.slice() : [];
+        const videosFrSub = prev && prev.videosFrSub ? prev.videosFrSub.slice() : [];
+        const videosFrDub = prev && prev.videosFrDub ? prev.videosFrDub.slice() : [];
+        const prevCount = prev && typeof prev.prevCount === 'number' ? prev.prevCount : 0;
+        for (let i = prevCount; i < count; i++) {
+            videos[i] = document.querySelector(`.ep-link-sub[data-ep="${i}"]`)?.value.trim() || '';
+            videosDub[i] = document.querySelector(`.ep-link-dub[data-ep="${i}"]`)?.value.trim() || '';
+            videosFrSub[i] = document.querySelector(`.ep-link-frsub[data-ep="${i}"]`)?.value.trim() || '';
+            videosFrDub[i] = document.querySelector(`.ep-link-frdub[data-ep="${i}"]`)?.value.trim() || '';
+        }
+        return { videos, videosDub, videosFrSub, videosFrDub };
+    }
+
+    // Update episode links inputs when episode count changes
+    document.getElementById('new-episode-count').addEventListener('input', function() {
+        updateEpisodeLinksInputs();
+    });
+
+    // Also update when switching anime/season
+    editAnimeSelect.addEventListener('change', function() {
+        if (editAnimeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
+        }
+    });
+    existingSeasonSelect.addEventListener('change', function() {
+        if (editAnimeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
+            updateEpisodeLinksInputs();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAdminAnimeTable();
+        // Auto-generate and preview ID as user types name
+        const nameInput = document.getElementById('new-anime-name');
+        let idPreview = document.getElementById('anime-id-preview');
+        if (!idPreview) {
+            idPreview = document.createElement('div');
+            idPreview.id = 'anime-id-preview';
+            idPreview.style = 'color:#888;font-size:0.98em;margin-bottom:8px;';
+            nameInput.parentElement.appendChild(idPreview);
+        }
+        nameInput.addEventListener('input', function() {
+            const id = this.value
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            idPreview.textContent = id ? `ID: ${id}` : '';
+        });
+        // Populate anime/season selects for edit-anime form
+        populateEditAnimeSelect();
+    });
+    // --- Dynamic Episode Links Inputs ---
+    function updateEpisodeLinksInputs() {
+        const container = document.getElementById('episode-links-container');
+        container.innerHTML = '';
+        const count = parseInt(document.getElementById('new-episode-count').value, 10) || 1;
+        const animeId = editAnimeSelect.value;
+        const seasonIdx = parseInt(existingSeasonSelect.value, 10);
+        const anime = animeDataCache.find(a => a.id === animeId);
+        const season = anime && anime.seasons && anime.seasons[seasonIdx];
+        // Use existing links if present
+        const existingVideos = (season && Array.isArray(season.videos)) ? season.videos : [];
+        const existingVideosDub = (season && Array.isArray(season.videosDub)) ? season.videosDub : [];
+        const existingVideosFrSub = (season && Array.isArray(season.videosFrSub)) ? season.videosFrSub : [];
+        const existingVideosFrDub = (season && Array.isArray(season.videosFrDub)) ? season.videosFrDub : [];
+        for (let i = 0; i < count; i++) {
+            const block = document.createElement('div');
+            block.className = 'episode-links-block';
+            block.style = 'border:1.5px solid #ffd166; border-radius:8px; margin-bottom:10px; padding:8px 6px; background:#fff9e6;';
+            block.innerHTML = `
+                <div style="font-weight:700;color:#e14b4b;margin-bottom:4px;">Episode ${i+1} Video URLs:</div>
+                <label>Sub: <input type="text" class="ep-link-sub" data-ep="${i}" value="${existingVideos[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>Dub: <input type="text" class="ep-link-dub" data-ep="${i}" value="${existingVideosDub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrSub: <input type="text" class="ep-link-frsub" data-ep="${i}" value="${existingVideosFrSub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
+                <label>FrDub: <input type="text" class="ep-link-frdub" data-ep="${i}" value="${existingVideosFrDub[i]||''}" style="margin:0 8px 6px 0; width:180px; border-radius:6px; border:1px solid #ffd166;"></label>
             `;
             container.appendChild(block);
         }
@@ -558,6 +743,41 @@
         });
         // Populate anime/season selects for add-episode form
         populateAnimeSelect();
+    });
+    // Simple translations for English and French
+    const translations = {
+      en: {
+        donate: '💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a>',
+        home: 'Home',
+        browse: 'Browse',
+        copyright: '&copy; 2025 AnimeRashii. All rights reserved.'
+      },
+      fr: {
+        donate: '💖 Aidez-nous à survivre ! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Faire un don</a>',
+        home: 'Accueil',
+        browse: 'Explorer',
+        copyright: '&copy; 2025 AnimeRashii. Tous droits réservés.'
+      }
+    };
+
+    function setLanguage(lang) {
+      localStorage.setItem('siteLang', lang);
+      document.querySelector('[data-i18n="donate"]').innerHTML = translations[lang].donate;
+      document.querySelector('[data-i18n="home"]').textContent = translations[lang].home;
+      document.querySelector('[data-i18n="browse"]').textContent = translations[lang].browse;
+      document.querySelector('[data-i18n="copyright"]').innerHTML = translations[lang].copyright;
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('siteLang') || 'en';
+      setLanguage(savedLang);
+      document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+      document.getElementById('lang-fr').addEventListener('click', function() { setLanguage('fr'); });
+      // Set initial active state
+      document.getElementById('lang-en').classList.toggle('active', savedLang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', savedLang === 'fr');
     });
     </script>
 </body>

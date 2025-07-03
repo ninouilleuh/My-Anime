@@ -23,6 +23,23 @@ async function getPopularAnimeList(animeList, topN = 5) {
 async function renderPopularAnime(animeList) {
     const grid = document.getElementById('popular-anime-grid');
     if (!grid) return;
+    // --- TRANSLATION SUPPORT FOR POPULAR ANIME ---
+    function getLang() {
+        return localStorage.getItem('siteLang') || 'en';
+    }
+    const popularTranslations = {
+        en: {
+            mostPopular: '★ Most Popular',
+            view: 'view',
+            views: 'views'
+        },
+        fr: {
+            mostPopular: '★ Le plus populaire',
+            view: 'vue',
+            views: 'vues'
+        }
+    };
+    const lang = getLang();
     const popular = await getPopularAnimeList(animeList, 5);
     grid.innerHTML = popular.map((anime, idx) => `
         <div class="anime-card" style="position:relative;">
@@ -31,14 +48,14 @@ async function renderPopularAnime(animeList) {
                 <div class="rank-bubble">${idx + 1}</div>
                 <div class="views-bubble image-bubble">
                     <span style="font-size:1.13em;line-height:1;" id="views-count-${anime.id}">${anime.views}</span>
-                    <span style="font-size:0.93em;opacity:0.85;">view${anime.views === 1 ? '' : 's'}</span>
+                    <span style="font-size:0.93em;opacity:0.85;">${anime.views === 1 ? popularTranslations[lang].view : popularTranslations[lang].views}</span>
                 </div>
             </a>
             <div class="info">
                 <div class="title" style="display:flex;align-items:center;gap:8px;">
                     <a href="pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a>
                 </div>
-                ${idx === 0 ? '<div style="margin-top:8px;color:#facc15;font-size:1.1em;">★ Most Popular</div>' : ''}
+                ${idx === 0 ? `<div style="margin-top:8px;color:#facc15;font-size:1.1em;">${popularTranslations[lang].mostPopular}</div>` : ''}
             </div>
         </div>
     `).join('');
@@ -127,51 +144,71 @@ document.addEventListener('DOMContentLoaded', function() {
             let carouselAutoInterval = null;
             const carouselAutoDelay = 4000;
 
-            // Render all cards ONCE
-            airingSoonGrid.innerHTML = upcoming.map((anime) => {
-                const date = new Date(anime.nextEpisodeDate);
-                const dateStr = date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-                return `
-                    <div class="anime-card">
-                        <a href="pages/anime.html?id=${anime.id}">
-                            ${anime.trailer
-                                ? `<div class="trailer-frame-wrapper">
-                                    <iframe src="${anime.trailer}" frameborder="0" allowfullscreen></iframe>
-                                   </div>`
-                                : `<img src="${anime.img}" alt="${anime.name}">`
-                            }
-                        </a>
-                        <div class="info">
-                            <div class="title"><a href="pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
-                            <div class="desc">Airs on: ${dateStr}</div>
-                            <div class="countdown" id="countdown-${anime.id}"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Countdown logic for each anime
-            upcoming.forEach(anime => {
-                const countdownElem = document.getElementById(`countdown-${anime.id}`);
-                if (!countdownElem) return;
-                function updateCountdown() {
-                    const now = new Date();
-                    const target = new Date(anime.nextEpisodeDate);
-                    const diff = target - now;
-                    if (diff <= 0) {
-                        countdownElem.textContent = "Now Airing!";
-                        return;
-                    }
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-                    const seconds = Math.floor((diff / 1000) % 60);
-                    countdownElem.textContent =
-                        `Countdown: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            // --- TRANSLATION SUPPORT FOR CAROUSEL ---
+            function getLang() {
+                return localStorage.getItem('siteLang') || 'en';
+            }
+            const carouselTranslations = {
+                en: {
+                    airsOn: 'Airs on:',
+                    countdown: 'Countdown:'
+                },
+                fr: {
+                    airsOn: 'Diffuse le :',
+                    countdown: 'Compte à rebours :'
                 }
-                updateCountdown();
-                setInterval(updateCountdown, 1000);
-            });
+            };
+
+            // --- RENDER CAROUSEL FUNCTION ---
+            function renderCarousel() {
+                const lang = getLang();
+                airingSoonGrid.innerHTML = upcoming.map((anime) => {
+                    const date = new Date(anime.nextEpisodeDate);
+                    const dateStr = date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                    return `
+                        <div class="anime-card">
+                            <a href="pages/anime.html?id=${anime.id}">
+                                ${anime.trailer
+                                    ? `<div class="trailer-frame-wrapper">
+                                        <iframe src="${anime.trailer}" frameborder="0" allowfullscreen></iframe>
+                                       </div>`
+                                    : `<img src="${anime.img}" alt="${anime.name}">`
+                                }
+                            </a>
+                            <div class="info">
+                                <div class="title"><a href="pages/anime.html?id=${anime.id}" style="color:inherit;text-decoration:none;">${anime.name}</a></div>
+                                <div class="desc">${carouselTranslations[lang].airsOn} ${dateStr}</div>
+                                <div class="countdown" id="countdown-${anime.id}"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                // Re-attach countdowns
+                upcoming.forEach(anime => {
+                    const countdownElem = document.getElementById(`countdown-${anime.id}`);
+                    if (!countdownElem) return;
+                    function updateCountdown() {
+                        const now = new Date();
+                        const target = new Date(anime.nextEpisodeDate);
+                        const diff = target - now;
+                        const lang = getLang();
+                        if (diff <= 0) {
+                            countdownElem.textContent = lang === 'fr' ? 'En cours de diffusion !' : 'Now Airing!';
+                            return;
+                        }
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                        const seconds = Math.floor((diff / 1000) % 60);
+                        countdownElem.textContent =
+                            `${carouselTranslations[lang].countdown} ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    }
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                });
+            }
+
+            renderCarousel();
 
             // Move carousel with smooth animation
             function moveCarousel() {
@@ -245,6 +282,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 carouselAutoAdvance = false;
                 setTimeout(() => { carouselAutoAdvance = true; }, carouselAutoDelay * 2);
             });
+
+            // --- INSTANT LANGUAGE SWITCH FOR CAROUSEL ---
+            const langEnBtn = document.getElementById('lang-en');
+            const langFrBtn = document.getElementById('lang-fr');
+            if (langEnBtn && langFrBtn) {
+                langEnBtn.addEventListener('click', () => {
+                    setTimeout(renderCarousel, 0);
+                    if (document.getElementById('popular-anime-grid')) {
+                        setTimeout(() => renderPopularAnime(homepageAnimeList), 0);
+                    }
+                });
+                langFrBtn.addEventListener('click', () => {
+                    setTimeout(renderCarousel, 0);
+                    if (document.getElementById('popular-anime-grid')) {
+                        setTimeout(() => renderPopularAnime(homepageAnimeList), 0);
+                    }
+                });
+            }
 
             // Render Popular Anime with up-to-date backend data
             renderPopularAnime(animeList);

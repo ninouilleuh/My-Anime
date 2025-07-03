@@ -76,76 +76,194 @@
         .dropdown-content a:hover {
             background: #181824;
         }
+        .lang-switcher {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .lang-btn {
+          background: #23233a;
+          color: #ffd166;
+          font-weight: 700;
+          border: 2px solid #ffd166;
+          border-radius: 16px;
+          padding: 7px 18px;
+          font-size: 1rem;
+          cursor: pointer;
+          box-shadow: 0 0 8px 0 #ffd16655, 0 2px 8px rgba(0,0,0,0.10);
+          transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s, transform 0.12s;
+          outline: none;
+          margin: 0;
+          letter-spacing: 1px;
+          text-shadow: 0 1px 4px #23233a88;
+        }
+        .lang-btn.active, .lang-btn:focus {
+          background: #ffd166;
+          color: #23233a;
+          border-color: #ff6e7f;
+          box-shadow: 0 0 16px 2px #ff6e7f99, 0 2px 8px rgba(0,0,0,0.10);
+          transform: scale(1.08);
+          z-index: 1;
+        }
+        .lang-btn:hover:not(.active) {
+          background: #2e2e4d;
+          color: #fff;
+          border-color: #bfe9ff;
+          box-shadow: 0 0 12px 1px #bfe9ff88, 0 2px 8px rgba(0,0,0,0.10);
+          transform: scale(1.04);
+        }
     </style>
 </head>
 <body>
     <div class="donate-top-cta">
-        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+        <span data-i18n="donate">💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
     </div>
     <header>
         <h1>AnimeRashii</h1>
+        <div class="lang-switcher" style="position:absolute;top:18px;right:24px;z-index:300;">
+            <button id="lang-en" class="lang-btn">EN</button>
+            <button id="lang-fr" class="lang-btn">FR</button>
+        </div>
         <nav>
-            <a href="../index.html">Home</a>
-            <a href="browse.html" style="color:#ffd166;">Browse</a>
-            <div class="dropdown">
-                <a href="#" id="genres-link">Genres ▼</a>
-                <div id="genres-dropdown" class="dropdown-content">
-                    <a href="browse.html?genre=action">Action</a>
-                    <a href="browse.html?genre=adventure">Adventure</a>
-                    <a href="browse.html?genre=comedy">Comedy</a>
-                    <a href="browse.html?genre=drama">Drama</a>
-                    <a href="browse.html?genre=ecchi">Ecchi</a>
-                    <a href="browse.html?genre=fantasy">Fantasy</a>
-                    <a href="browse.html?genre=horror">Horror</a>
-                    <a href="browse.html?genre=mahou%20shoujo">Mahou Shoujo</a>
-                    <a href="browse.html?genre=mecha">Mecha</a>
-                    <a href="browse.html?genre=music">Music</a>
-                    <a href="browse.html?genre=mystery">Mystery</a>
-                    <a href="browse.html?genre=psychological">Psychological</a>
-                    <a href="browse.html?genre=romance">Romance</a>
-                    <a href="browse.html?genre=sci-fi">Sci-Fi</a>
-                    <a href="browse.html?genre=slice%20of%20life">Slice of Life</a>
-                    <a href="browse.html?genre=sports">Sports</a>
-                    <a href="browse.html?genre=supernatural">Supernatural</a>
-                    <a href="browse.html?genre=thriller">Thriller</a>
-                </div>
-            </div>
+            <a href="../index.html" data-i18n="home">Home</a>
+            <a href="browse.html" style="color:#ffd166;" data-i18n="browse">Browse</a>
         </nav>
         <div class="browse-bar-container">
-            <input type="text" id="browse-bar" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
+            <input type="text" id="browse-bar" data-i18n="search" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
             <select id="genre-select" style="padding:8px 16px; border-radius:6px; border:1px solid #ccc; margin-left:10px;">
-                <option value="">All Genres</option>
-                <option value="action">Action</option>
-                <option value="adventure">Adventure</option>
-                <option value="comedy">Comedy</option>
-                <option value="drama">Drama</option>
-                <option value="ecchi">Ecchi</option>
-                <option value="fantasy">Fantasy</option>
-                <option value="horror">Horror</option>
-                <option value="mahou shoujo">Mahou Shoujo</option>
-                <option value="mecha">Mecha</option>
-                <option value="music">Music</option>
-                <option value="mystery">Mystery</option>
-                <option value="psychological">Psychological</option>
-                <option value="romance">Romance</option>
-                <option value="sci-fi">Sci-Fi</option>
-                <option value="slice of life">Slice of Life</option>
-                <option value="sports">Sports</option>
-                <option value="supernatural">Supernatural</option>
-                <option value="thriller">Thriller</option>
+                <option value="" data-i18n="allGenres">All Genres</option>
+                <option value="action" data-i18n="action">Action</option>
+                <option value="adventure" data-i18n="adventure">Adventure</option>
+                <option value="comedy" data-i18n="comedy">Comedy</option>
+                <option value="drama" data-i18n="drama">Drama</option>
+                <option value="ecchi" data-i18n="ecchi">Ecchi</option>
+                <option value="fantasy" data-i18n="fantasy">Fantasy</option>
+                <option value="horror" data-i18n="horror">Horror</option>
+                <option value="mahou shoujo" data-i18n="mahou">Mahou Shoujo</option>
+                <option value="mecha" data-i18n="mecha">Mecha</option>
+                <option value="music" data-i18n="music">Music</option>
+                <option value="mystery" data-i18n="mystery">Mystery</option>
+                <option value="psychological" data-i18n="psychological">Psychological</option>
+                <option value="romance" data-i18n="romance">Romance</option>
+                <option value="sci-fi" data-i18n="scifi">Sci-Fi</option>
+                <option value="slice of life" data-i18n="slice">Slice of Life</option>
+                <option value="sports" data-i18n="sports">Sports</option>
+                <option value="supernatural" data-i18n="supernatural">Supernatural</option>
+                <option value="thriller" data-i18n="thriller">Thriller</option>
             </select>
             <div id="browse-suggestion"></div>
         </div>
     </header>
     <div class="container">
-        <h2>All Anime</h2>
+        <h2 data-i18n="allAnime">All Anime</h2>
         <div class="anime-grid" id="anime-grid"></div>
     </div>
     <footer>
-        &copy; 2025 AnimeRashii. All rights reserved.
+        <span data-i18n="copyright">&copy; 2025 AnimeRashii. All rights reserved.</span>
     </footer>
     <script src="../js/script.js"></script>
     <script>
+    // Simple translations for English and French
+    const translations = {
+      en: {
+        donate: '💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a>',
+        home: 'Home',
+        browse: 'Browse',
+        genres: 'Genres ▼',
+        action: 'Action',
+        adventure: 'Adventure',
+        comedy: 'Comedy',
+        drama: 'Drama',
+        ecchi: 'Ecchi',
+        fantasy: 'Fantasy',
+        horror: 'Horror',
+        mahou: 'Mahou Shoujo',
+        mecha: 'Mecha',
+        music: 'Music',
+        mystery: 'Mystery',
+        psychological: 'Psychological',
+        romance: 'Romance',
+        scifi: 'Sci-Fi',
+        slice: 'Slice of Life',
+        sports: 'Sports',
+        supernatural: 'Supernatural',
+        thriller: 'Thriller',
+        allGenres: 'All Genres',
+        search: 'Search anime...',
+        allAnime: 'All Anime',
+        copyright: '&copy; 2025 AnimeRashii. All rights reserved.'
+      },
+      fr: {
+        donate: '💖 Aidez-nous à survivre ! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Faire un don</a>',
+        home: 'Accueil',
+        browse: 'Explorer',
+        genres: 'Genres ▼',
+        action: 'Action',
+        adventure: 'Aventure',
+        comedy: 'Comédie',
+        drama: 'Drame',
+        ecchi: 'Ecchi',
+        fantasy: 'Fantastique',
+        horror: 'Horreur',
+        mahou: 'Mahou Shoujo',
+        mecha: 'Mecha',
+        music: 'Musique',
+        mystery: 'Mystère',
+        psychological: 'Psychologique',
+        romance: 'Romance',
+        scifi: 'Science-Fiction',
+        slice: 'Tranche de vie',
+        sports: 'Sport',
+        supernatural: 'Surnaturel',
+        thriller: 'Thriller',
+        allGenres: 'Tous les genres',
+        search: 'Rechercher un anime...',
+        allAnime: 'Tous les animes',
+        copyright: '&copy; 2025 AnimeRashii. Tous droits réservés.'
+      }
+    };
+
+    function setLanguage(lang) {
+      localStorage.setItem('siteLang', lang);
+      document.querySelector('[data-i18n="donate"]').innerHTML = translations[lang].donate;
+      document.querySelector('[data-i18n="home"]').textContent = translations[lang].home;
+      document.querySelector('[data-i18n="browse"]').textContent = translations[lang].browse;
+      // document.querySelector('[data-i18n="genres"]').textContent = translations[lang].genres;
+      document.querySelectorAll('[data-i18n="action"]').forEach(e => e.textContent = translations[lang].action);
+      document.querySelectorAll('[data-i18n="adventure"]').forEach(e => e.textContent = translations[lang].adventure);
+      document.querySelectorAll('[data-i18n="comedy"]').forEach(e => e.textContent = translations[lang].comedy);
+      document.querySelectorAll('[data-i18n="drama"]').forEach(e => e.textContent = translations[lang].drama);
+      document.querySelectorAll('[data-i18n="ecchi"]').forEach(e => e.textContent = translations[lang].ecchi);
+      document.querySelectorAll('[data-i18n="fantasy"]').forEach(e => e.textContent = translations[lang].fantasy);
+      document.querySelectorAll('[data-i18n="horror"]').forEach(e => e.textContent = translations[lang].horror);
+      document.querySelectorAll('[data-i18n="mahou"]').forEach(e => e.textContent = translations[lang].mahou);
+      document.querySelectorAll('[data-i18n="mecha"]').forEach(e => e.textContent = translations[lang].mecha);
+      document.querySelectorAll('[data-i18n="music"]').forEach(e => e.textContent = translations[lang].music);
+      document.querySelectorAll('[data-i18n="mystery"]').forEach(e => e.textContent = translations[lang].mystery);
+      document.querySelectorAll('[data-i18n="psychological"]').forEach(e => e.textContent = translations[lang].psychological);
+      document.querySelectorAll('[data-i18n="romance"]').forEach(e => e.textContent = translations[lang].romance);
+      document.querySelectorAll('[data-i18n="scifi"]').forEach(e => e.textContent = translations[lang].scifi);
+      document.querySelectorAll('[data-i18n="slice"]').forEach(e => e.textContent = translations[lang].slice);
+      document.querySelectorAll('[data-i18n="sports"]').forEach(e => e.textContent = translations[lang].sports);
+      document.querySelectorAll('[data-i18n="supernatural"]').forEach(e => e.textContent = translations[lang].supernatural);
+      document.querySelectorAll('[data-i18n="thriller"]').forEach(e => e.textContent = translations[lang].thriller);
+      document.querySelector('[data-i18n="allGenres"]').textContent = translations[lang].allGenres;
+      document.querySelector('[data-i18n="search"]').placeholder = translations[lang].search;
+      document.querySelector('[data-i18n="allAnime"]').textContent = translations[lang].allAnime;
+      document.querySelector('[data-i18n="copyright"]').innerHTML = translations[lang].copyright;
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('siteLang') || 'en';
+      setLanguage(savedLang);
+      document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+      document.getElementById('lang-fr').addEventListener('click', function() { setLanguage('fr'); });
+      // Set initial active state
+      document.getElementById('lang-en').classList.toggle('active', savedLang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', savedLang === 'fr');
+    });
     // --- Backend Anime Data Fetch/Render ---
     let animeList = [];
     async function fetchAnimeList() {
@@ -200,23 +318,8 @@
     const browseBar = document.getElementById('browse-bar');
     const genreSelect = document.getElementById('genre-select');
     const suggestionDiv = document.getElementById('browse-suggestion');
-    const genresLink = document.getElementById('genres-link');
-    const genresDropdown = document.getElementById('genres-dropdown');
     browseBar.addEventListener('input', function() { filterAndRender(); });
     genreSelect.addEventListener('change', function() { filterAndRender(); });
-    genresLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        genresDropdown.style.display = genresDropdown.style.display === 'block' ? 'none' : 'block';
-    });
-    Array.from(document.querySelectorAll('#genres-dropdown a')).forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const genre = this.getAttribute('href').split('genre=')[1];
-            genreSelect.value = genre || "";
-            filterAndRender();
-            genresDropdown.style.display = 'none';
-        });
-    });
     function filterAndRender() {
         const query = browseBar.value.trim().toLowerCase();
         const genre = genreSelect.value;
@@ -254,11 +357,7 @@
     browseBar.addEventListener('focus', function() {
         if (suggestionDiv.innerHTML.trim()) suggestionDiv.classList.add('active');
     });
-    document.addEventListener('click', function(e) {
-        if (!genresLink.contains(e.target) && !genresDropdown.contains(e.target)) {
-            genresDropdown.style.display = 'none';
-        }
-    });
+    // Removed genres dropdown event listeners since the dropdown is gone
     function getParam(name) {
         const params = new URLSearchParams(window.location.search);
         return params.get(name);

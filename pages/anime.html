@@ -7,16 +7,58 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/anime.css">
+    <style>
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .lang-btn {
+      background: #23233a;
+      color: #ffd166;
+      font-weight: 700;
+      border: 2px solid #ffd166;
+      border-radius: 16px;
+      padding: 7px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 8px 0 #ffd16655, 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s, transform 0.12s;
+      outline: none;
+      margin: 0;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px #23233a88;
+    }
+    .lang-btn.active, .lang-btn:focus {
+      background: #ffd166;
+      color: #23233a;
+      border-color: #ff6e7f;
+      box-shadow: 0 0 16px 2px #ff6e7f99, 0 2px 8px rgba(0,0,0,0.10);
+      transform: scale(1.08);
+      z-index: 1;
+    }
+    .lang-btn:hover:not(.active) {
+      background: #2e2e4d;
+      color: #fff;
+      border-color: #bfe9ff;
+      box-shadow: 0 0 12px 1px #bfe9ff88, 0 2px 8px rgba(0,0,0,0.10);
+      transform: scale(1.04);
+    }
+    </style>
 </head>
 <body>
     <div class="donate-top-cta">
-        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+        <span data-i18n="donate">💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
     </div>
     <header>
         <h1>AnimeRashii</h1>
+        <div class="lang-switcher" style="position:absolute;top:18px;right:24px;z-index:300;">
+            <button id="lang-en" class="lang-btn">EN</button>
+            <button id="lang-fr" class="lang-btn">FR</button>
+        </div>
     </header>
     <div class="container">
-        <a href="../index.html" class="back-link">&larr; Back to Home</a>
+        <a href="../index.html" class="back-link" data-i18n="backHome">&larr; Back to Home</a>
         <div class="anime-details">
             <img id="anime-img" src="" alt="">
             <div class="anime-info">
@@ -28,8 +70,43 @@
         </div>
     </div>
     <footer>
-        &copy; 2025 AnimeRashii. All rights reserved.
+        <span data-i18n="copyright">&copy; 2025 AnimeRashii. All rights reserved.</span>
     </footer>
     <script src="../js/anime.js"></script>
+    <script>
+    // Simple translations for English and French
+    const translations = {
+      en: {
+        donate: '💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a>',
+        backHome: '← Back to Home',
+        copyright: '&copy; 2025 AnimeRashii. All rights reserved.'
+      },
+      fr: {
+        donate: '💖 Aidez-nous à survivre ! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Faire un don</a>',
+        backHome: '← Retour à l\'accueil',
+        copyright: '&copy; 2025 AnimeRashii. Tous droits réservés.'
+      }
+    };
+
+    function setLanguage(lang) {
+      localStorage.setItem('siteLang', lang);
+      document.querySelector('[data-i18n="donate"]').innerHTML = translations[lang].donate;
+      document.querySelector('[data-i18n="backHome"]').textContent = translations[lang].backHome;
+      document.querySelector('[data-i18n="copyright"]').innerHTML = translations[lang].copyright;
+      // Update active state for language buttons
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('siteLang') || 'en';
+      setLanguage(savedLang);
+      document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+      document.getElementById('lang-fr').addEventListener('click', function() { setLanguage('fr'); });
+      // Set initial active state
+      document.getElementById('lang-en').classList.toggle('active', savedLang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', savedLang === 'fr');
+    });
+    </script>
 </body>
 </html>

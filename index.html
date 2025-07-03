@@ -9,40 +9,182 @@
     <link rel="stylesheet" href="css/header-anime.css">
     <!-- <script src="js/animeData.js"></script> -->
     <script src="js/script.js"></script>
+    <script>
+    // Simple translations for English and French
+    const translations = {
+      en: {
+        donate: '💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a>',
+        home: 'Home',
+        browse: 'Browse',
+        genres: 'Genres ▼',
+        action: 'Action',
+        adventure: 'Adventure',
+        fantasy: 'Fantasy',
+        drama: 'Drama',
+        scifi: 'Sci-Fi',
+        mystery: 'Mystery',
+        supernatural: 'Supernatural',
+        search: 'Search anime...',
+        airingSoon: 'Airing Soon',
+        suggestTitle: 'Want to see your favorite anime here?',
+        suggestDesc: 'Help us grow AnimeRashii! Suggest a new anime to add to the site.',
+        suggestBtn: 'Suggest Anime',
+        animeName: 'Anime name (required)',
+        animeDesc: 'Description (optional)',
+        sendSuggestion: 'Send Suggestion',
+        popular: 'Popular Anime',
+        lastEpisodes: 'Last Episodes Added',
+        recentlyAdded: 'Recently Added',
+        copyright: '&copy; 2025 AnimeRashii. All rights reserved.'
+      },
+      fr: {
+        donate: '💖 Aidez-nous à survivre ! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Faire un don</a>',
+        home: 'Accueil',
+        browse: 'Explorer',
+        genres: 'Genres ▼',
+        action: 'Action',
+        adventure: 'Aventure',
+        fantasy: 'Fantastique',
+        drama: 'Drame',
+        scifi: 'Science-Fiction',
+        mystery: 'Mystère',
+        supernatural: 'Surnaturel',
+        search: 'Rechercher un anime...',
+        airingSoon: 'Bientôt diffusé',
+        suggestTitle: 'Vous voulez voir votre anime préféré ici ?',
+        suggestDesc: 'Aidez-nous à développer AnimeRashii ! Suggérez un nouvel anime à ajouter au site.',
+        suggestBtn: 'Suggérer un anime',
+        animeName: 'Nom de l\'anime (requis)',
+        animeDesc: 'Description (optionnel)',
+        sendSuggestion: 'Envoyer la suggestion',
+        popular: 'Animes populaires',
+        lastEpisodes: 'Derniers épisodes ajoutés',
+        recentlyAdded: 'Récemment ajoutés',
+        copyright: '&copy; 2025 AnimeRashii. Tous droits réservés.'
+      }
+    };
+
+    function setLanguage(lang) {
+      localStorage.setItem('siteLang', lang);
+      // Translate all static text
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = translations[lang][key];
+          } else if (key === 'donate' || key === 'copyright') {
+            el.innerHTML = translations[lang][key];
+          } else {
+            el.textContent = translations[lang][key];
+          }
+        }
+      });
+
+      // Update active state for language buttons
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+
+      // --- DYNAMIC CONTENT TRANSLATION ---
+      // Carousel: update 'Airs on' and 'Countdown' labels if present
+      document.querySelectorAll('.carousel-anime-airs').forEach(function(el) {
+        if (lang === 'fr') {
+          el.textContent = 'Diffuse le ' + (el.dataset.date || '');
+        } else {
+          el.textContent = 'Airs on ' + (el.dataset.date || '');
+        }
+      });
+      document.querySelectorAll('.carousel-anime-countdown').forEach(function(el) {
+        if (lang === 'fr') {
+          el.textContent = 'Débute dans ' + (el.dataset.countdown || '');
+        } else {
+          el.textContent = 'Countdown: ' + (el.dataset.countdown || '');
+        }
+      });
+      // Popular Anime: update 'Most Popular' and 'view(s)' labels if present
+      document.querySelectorAll('.popular-anime-views').forEach(function(el) {
+        if (lang === 'fr') {
+          el.textContent = (el.dataset.views || '0') + ' vue' + ((el.dataset.views === '1') ? '' : 's');
+        } else {
+          el.textContent = (el.dataset.views || '0') + ' view' + ((el.dataset.views === '1') ? '' : 's');
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      // Set language from localStorage if available
+      const savedLang = localStorage.getItem('siteLang') || 'en';
+      setLanguage(savedLang);
+      document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+      document.getElementById('lang-fr').addEventListener('click', function() { setLanguage('fr'); });
+      // Set initial active state
+      document.getElementById('lang-en').classList.toggle('active', savedLang === 'en');
+      document.getElementById('lang-fr').classList.toggle('active', savedLang === 'fr');
+    });
+    </script>
+  <style>
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .lang-btn {
+      background: #23233a;
+      color: #ffd166;
+      font-weight: 700;
+      border: 2px solid #ffd166;
+      border-radius: 16px;
+      padding: 7px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 8px 0 #ffd16655, 0 2px 8px rgba(0,0,0,0.10);
+      transition: background 0.18s, color 0.18s, border 0.18s, box-shadow 0.18s, transform 0.12s;
+      outline: none;
+      margin: 0;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px #23233a88;
+    }
+    .lang-btn.active, .lang-btn:focus {
+      background: #ffd166;
+      color: #23233a;
+      border-color: #ff6e7f;
+      box-shadow: 0 0 16px 2px #ff6e7f99, 0 2px 8px rgba(0,0,0,0.10);
+      transform: scale(1.08);
+      z-index: 1;
+    }
+    .lang-btn:hover:not(.active) {
+      background: #2e2e4d;
+      color: #fff;
+      border-color: #bfe9ff;
+      box-shadow: 0 0 12px 1px #bfe9ff88, 0 2px 8px rgba(0,0,0,0.10);
+      transform: scale(1.04);
+    }
+  </style>
 </head>
 <body>
     <div class="donate-top-cta">
-        <span>💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
+        <span data-i18n="donate">💖 Help us stay alive! <a href="https://www.paypal.com/paypalme/palomaresnina" target="_blank" rel="noopener" class="donate-link-top">Donate</a></span>
     </div>
     <header>
         <div class="header-anime-bg"></div>
         <div class="header-content">
             <h1>AnimeRashii</h1>
+            <div class="lang-switcher" style="position:absolute;top:18px;right:24px;z-index:300;">
+                <button id="lang-en" class="lang-btn">EN</button>
+                <button id="lang-fr" class="lang-btn">FR</button>
+            </div>
             <nav>
-                <a href="index.html">Home</a>
-                <a href="pages/browse.html">Browse</a>
-                <div class="dropdown" style="display:inline-block;position:relative;">
-                    <a href="#" id="genres-link">Genres ▼</a>
-                    <div id="genres-dropdown" class="dropdown-content" style="display:none;position:absolute;left:0;top:100%;background:#23233a;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.18);min-width:160px;z-index:200;">
-                        <a href="pages/browse.html?genre=action">Action</a>
-                        <a href="pages/browse.html?genre=adventure">Adventure</a>
-                        <a href="pages/browse.html?genre=fantasy">Fantasy</a>
-                        <a href="pages/browse.html?genre=drama">Drama</a>
-                        <a href="pages/browse.html?genre=sci-fi">Sci-Fi</a>
-                        <a href="pages/browse.html?genre=mystery">Mystery</a>
-                        <a href="pages/browse.html?genre=supernatural">Supernatural</a>
-                    </div>
-                </div>
+                <a href="index.html" data-i18n="home">Home</a>
+                <a href="pages/browse.html" data-i18n="browse">Browse</a>
             </nav>
             <div class="browse-bar-container">
-                <input type="text" id="browse-bar" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
+                <input type="text" id="browse-bar" data-i18n="search" placeholder="Search anime..." style="padding:8px 16px; width:250px; border-radius:6px; border:1px solid #ccc;">
                 <div id="browse-suggestion"></div>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <h2>Airing Soon</h2>
+        <h2 data-i18n="airingSoon">Airing Soon</h2>
         <div class="carousel-container">
             <button id="carousel-prev" class="carousel-btn">&#8592;</button>
             <div class="carousel-viewport">
@@ -54,15 +196,15 @@
 
     <div class="container">
         <div class="cta-suggest-anime">
-            <h2>Want to see your favorite anime here?</h2>
-            <p>Help us grow AnimeRashii! Suggest a new anime to add to the site.</p>
-            <button class="cta-btn" id="open-suggest-form" type="button">Suggest Anime</button>
+            <h2 data-i18n="suggestTitle">Want to see your favorite anime here?</h2>
+            <p data-i18n="suggestDesc">Help us grow AnimeRashii! Suggest a new anime to add to the site.</p>
+            <button class="cta-btn" id="open-suggest-form" type="button" data-i18n="suggestBtn">Suggest Anime</button>
             <form id="suggest-anime-form" style="display:none;margin-top:28px;" autocomplete="off">
-                <input type="text" id="anime-name" name="anime-name" placeholder="Anime name (required)" required style="padding:12px 16px;font-size:1.1rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;">
+                <input type="text" id="anime-name" name="anime-name" data-i18n="animeName" placeholder="Anime name (required)" required style="padding:12px 16px;font-size:1.1rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;">
                 <br>
-                <textarea id="anime-desc" name="anime-desc" placeholder="Description (optional)" rows="3" style="padding:12px 16px;font-size:1.05rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;"></textarea>
+                <textarea id="anime-desc" name="anime-desc" data-i18n="animeDesc" placeholder="Description (optional)" rows="3" style="padding:12px 16px;font-size:1.05rem;border-radius:8px;border:1px solid #ccc;width:90%;max-width:340px;margin-bottom:14px;"></textarea>
                 <br>
-                <button type="submit" class="cta-btn" style="font-size:1.05rem;padding:10px 32px;">Send Suggestion</button>
+                <button type="submit" class="cta-btn" style="font-size:1.05rem;padding:10px 32px;" data-i18n="sendSuggestion">Send Suggestion</button>
                 <div id="suggest-success" style="display:none;color:#23233a;background:#ffd166;padding:10px 18px;border-radius:8px;margin-top:16px;font-weight:600;"></div>
             </form>
         </div>
@@ -71,11 +213,11 @@
 
 
     <div class="container">
-        <h2>Popular Anime</h2>
+        <h2 data-i18n="popular">Popular Anime</h2>
         <div class="anime-grid" id="popular-anime-grid"></div>
     </div>
     <div class="container">
-        <h2>Last Episodes Added</h2>
+        <h2 data-i18n="lastEpisodes">Last Episodes Added</h2>
         <div class="anime-grid">
             <div class="anime-card">
                 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End Episode 24">
@@ -98,13 +240,13 @@
         </div>
     </div>
     <div class="container">
-        <h2>Recently Added</h2>
+        <h2 data-i18n="recentlyAdded">Recently Added</h2>
         <div class="anime-grid">
             <div class="anime-card">
                 <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End">
                 <div class="info">
                     <div class="title">Frieren: Beyond Journey’s End</div>
-                    <div class="desc">After defeating the Demon King, elf mage Frieren embarks on a journey to understand human life. Long outliving her former party, she sets out to fulfill their last wishes, leading to a new adventure of self-discovery.</div>
+                    <div class="desc"></div>
                 </div>
             </div>
             <div class="anime-card">
@@ -131,7 +273,29 @@
         </div>
     </div>
     <footer>
-        &copy; 2025 AnimeRashii. All rights reserved.
+        <span data-i18n="copyright">&copy; 2025 AnimeRashii. All rights reserved.</span>
+        <a id="secret-admin-link" href="pages/admin.html" style="opacity:0;position:absolute;right:12px;bottom:8px;font-size:0.9em;pointer-events:auto;transition:opacity 0.2s;z-index:999;">Admin</a>
+        <script>
+        // Reveal secret admin link on triple click of the copyright
+        (function() {
+          var secret = document.getElementById('secret-admin-link');
+          var copyright = document.querySelector('footer [data-i18n="copyright"]');
+          var clickCount = 0;
+          var timer = null;
+          if (copyright && secret) {
+            copyright.addEventListener('click', function() {
+              clickCount++;
+              if (clickCount === 3) {
+                secret.style.opacity = 1;
+                setTimeout(function() { secret.style.opacity = 0; }, 6000);
+                clickCount = 0;
+              }
+              clearTimeout(timer);
+              timer = setTimeout(function() { clickCount = 0; }, 1200);
+            });
+          }
+        })();
+        </script>
     </footer>
 </body>
 </html>

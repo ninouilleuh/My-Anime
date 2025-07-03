@@ -1,20 +1,22 @@
-// Dummy data for demonstration
 
-const animeList = window.animeData;
+// Fetch animeData.json and run the rest of the logic after loading
+fetch('../animeData.json')
+  .then(res => res.json())
+  .then(animeList => {
+    function getParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+    }
 
-function getParam(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-}
+    const animeId = getParam('id');
+    const seasonNum = parseInt(getParam('season'), 10) || 1;
+    const episodeNum = parseInt(getParam('episode'), 10) || 1;
 
-const animeId = getParam('id');
-const seasonNum = parseInt(getParam('season'), 10) || 1;
-const episodeNum = parseInt(getParam('episode'), 10) || 1;
-
-const anime = animeList.find(a => a.id === animeId);
-if (!anime || !anime.seasons[seasonNum - 1]) {
-    document.querySelector('.container').innerHTML = "<p>Anime or season not found.</p>";
-} else {
+    const anime = animeList.find(a => a.id === animeId);
+    if (!anime || !anime.seasons[seasonNum - 1]) {
+        document.querySelector('.container').innerHTML = "<p>Anime or season not found.</p>";
+        return;
+    }
     document.getElementById('anime-title').textContent = anime.title;
     document.getElementById('season-title').textContent = anime.seasons[seasonNum - 1].title;
 
@@ -75,7 +77,6 @@ if (!anime || !anime.seasons[seasonNum - 1]) {
         } else if (lang === 'frdub' && season.videosFrDub && season.videosFrDub[episodeNum - 1]) {
             videoUrl = season.videosFrDub[episodeNum - 1];
         } else {
-            const season = anime.seasons[seasonNum - 1];
             videoUrl = season.videos[episodeNum - 1]; // default to EN sub
         }
         const videoContainer = document.getElementById('video-container');
@@ -97,7 +98,7 @@ if (!anime || !anime.seasons[seasonNum - 1]) {
         window.location.search = `?id=${animeId}&season=${seasonNum}&episode=${this.value}`;
         // Optionally: showVideo();
     });
-}
+  });
 
 // Language toggle button logic
 const siteLangToggle = document.getElementById('site-lang-toggle');
@@ -106,7 +107,7 @@ const siteLangKey = 'siteLanguage';
 // Set initial button text and site language
 function updateSiteLangUI() {
     const lang = localStorage.getItem(siteLangKey) || 'en';
-    siteLangToggle.textContent = lang === 'fr' ? 'English' : 'Français';
+    if (siteLangToggle) siteLangToggle.textContent = lang === 'fr' ? 'English' : 'Français';
     document.documentElement.lang = lang;
 
     // Translate static text
@@ -115,28 +116,29 @@ function updateSiteLangUI() {
         backLink.textContent = lang === 'fr' ? '← Retour à l’accueil' : '← Back to Home';
     }
 
-    // Show/hide language buttons
+    // Show/hide language radio options robustly
     document.querySelectorAll('.lang-en').forEach(el => {
-        el.style.display = lang === 'fr' ? 'none' : '';
+        el.style.display = lang === 'en' ? '' : 'none';
     });
     document.querySelectorAll('.lang-fr').forEach(el => {
         el.style.display = lang === 'fr' ? '' : 'none';
     });
 
-    // If switching to French and EN lang is selected, switch to FR sub by default
+    // Always select the correct radio and update video for both languages
+    const animeId = new URLSearchParams(window.location.search).get('id');
     if (lang === 'fr') {
         const frRadio = document.getElementById('lang-frsub');
-        if (frRadio && !frRadio.checked && document.querySelector('.lang-radio.lang-en:checked')) {
+        if (frRadio) {
             frRadio.checked = true;
-            if (typeof showVideo === 'function') showVideo();
+            localStorage.setItem(`animeLang_${animeId}`, 'frsub');
+            showVideo();
         }
-    }
-    // If switching to English and FR lang is selected, switch to EN sub by default
-    if (lang === 'en') {
+    } else if (lang === 'en') {
         const enRadio = document.getElementById('lang-sub');
-        if (enRadio && !enRadio.checked && document.querySelector('.lang-radio.lang-fr:checked')) {
+        if (enRadio) {
             enRadio.checked = true;
-            if (typeof showVideo === 'function') showVideo();
+            localStorage.setItem(`animeLang_${animeId}`, 'sub');
+            showVideo();
         }
     }
 }
