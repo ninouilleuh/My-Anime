@@ -101,6 +101,31 @@ app.post('/api/anime', (req, res) => {
     });
 });
 
+// GET /api/anime/:id - fetch a single anime by ID
+app.get('/api/anime/:id', (req, res, next) => {
+    // Ignore /views subroute
+    if (req.params.id === 'views') return next();
+
+    const animeId = req.params.id;
+    fs.readFile(animeDataPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading animeData.json:', err);
+            return res.status(500).json({ error: 'Failed to read anime data.' });
+        }
+        let animeList;
+        try {
+            animeList = JSON.parse(data);
+        } catch (parseErr) {
+            console.error('Error parsing animeData.json:', parseErr);
+            return res.status(500).json({ error: 'Failed to parse anime data.' });
+        }
+        const anime = animeList.find(a => a.id === animeId);
+        if (!anime) {
+            return res.status(404).json({ error: 'Anime not found.' });
+        }
+        res.json(anime);
+    });
+});
 // --- VIEW COUNTS ENDPOINTS ---
 // GET /api/anime/:id/views - get view count for an anime
 app.get('/api/anime/:id/views', (req, res) => {
