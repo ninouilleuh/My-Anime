@@ -161,13 +161,15 @@ app.patch('/api/anime/:id', (req, res, next) => {
         Object.keys(updateFields).forEach(key => {
             anime[key] = updateFields[key];
         });
-        fs.writeFile(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8', (writeErr) => {
-            if (writeErr) {
-                console.error('Error writing animeData.json:', writeErr);
-                return res.status(500).json({ error: 'Failed to update anime data.' });
-            }
-            res.json(anime);
-        });
+
+        // Ensure the animeList is written to disk synchronously and check for errors
+        try {
+            fs.writeFileSync(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8');
+        } catch (writeErr) {
+            console.error('Error writing animeData.json:', writeErr);
+            return res.status(500).json({ error: 'Failed to update anime data.' });
+        }
+        res.json(anime);
     });
 });
 // --- VIEW COUNTS ENDPOINTS ---
