@@ -215,6 +215,8 @@
                   <b>Episodes:</b><br><input type="number" id="new-season-episodes" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
                 </div>
                 <div id="add-episode-fields" style="margin-bottom:8px; display:none;">
+                  <b>Delete Season:</b><br>
+                  <button type="button" class="admin-btn" id="delete-season-btn" style="background:#e14b4b;color:#fff;margin-bottom:10px;">Delete Selected Season</button>
                   <b>Select Season:</b><br>
                   <select id="existing-season-select" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;"></select><br>
                   <b>New Total Episodes:</b><br><input type="number" id="new-episode-count" min="1" value="1" style="margin:0 0 10px 0; padding:4px 8px; border-radius:6px; border:1px solid #ffd166; width:98%;">
@@ -230,6 +232,36 @@
         <span data-i18n="copyright">&copy; 2025 AnimeRashii. All rights reserved.</span>
     </footer>
     <script>
+    // --- Delete Season Logic ---
+    document.getElementById('delete-season-btn').addEventListener('click', async function() {
+        const animeId = editAnimeSelect.value;
+        const seasonIdx = parseInt(existingSeasonSelect.value, 10);
+        if (!animeId || isNaN(seasonIdx)) return;
+        if (!confirm('Are you sure you want to delete this season? This cannot be undone.')) return;
+        let updatedAnime = animeDataCache.find(a => a.id === animeId);
+        if (!updatedAnime || !Array.isArray(updatedAnime.seasons) || !updatedAnime.seasons[seasonIdx]) return;
+        updatedAnime.seasons.splice(seasonIdx, 1);
+        // Send PATCH to backend
+        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ seasons: updatedAnime.seasons })
+        });
+        let statusMsg = addEpisodeSuccess;
+        if (resp.ok) {
+            statusMsg.textContent = 'Season deleted!';
+            statusMsg.style.color = '#16a34a';
+            statusMsg.style.display = 'inline';
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 2000);
+            await populateEditAnimeSelect();
+            updateEpisodeLinksInputs();
+        } else {
+            statusMsg.textContent = 'Failed to delete season (server error).';
+            statusMsg.style.color = '#e14b4b';
+            statusMsg.style.display = 'inline';
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 3500);
+        }
+    });
     // --- Admin Password Protection Overlay + F12 Restriction ---
     (function() {
         const overlay = document.getElementById('admin-password-overlay');
