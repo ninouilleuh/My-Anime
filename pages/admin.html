@@ -365,7 +365,7 @@
         // Fetch all anime to check for duplicates
         let animeList = [];
         try {
-            animeList = await fetch('/api/anime').then(r => {
+            animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => {
                 if (!r.ok) throw new Error('Failed to fetch anime list');
                 return r.json();
             });
@@ -387,7 +387,7 @@
         const animeObj = { id, name, desc, img, genres, seasons, ongoing };
         if (trailer) animeObj.trailer = trailer;
         if (nextEpDate) animeObj.nextEpisodeDate = nextEpDate;
-        const resp = await fetch('/api/anime', {
+        const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(animeObj)
@@ -410,7 +410,7 @@
         tbody.innerHTML = '';
         let animeList = [];
         try {
-            animeList = await fetch('/api/anime').then(r => {
+            animeList = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => {
                 if (!r.ok) throw new Error('Failed to fetch anime list');
                 return r.json();
             });
@@ -461,7 +461,7 @@
     async function populateEditAnimeSelect() {
         editAnimeSelect.innerHTML = '';
         try {
-            animeDataCache = await fetch('/api/anime').then(r => {
+            animeDataCache = await fetch('https://my-anime-l74v.onrender.com/api/anime').then(r => {
                 if (!r.ok) throw new Error('Failed to fetch anime list');
                 return r.json();
             });
@@ -519,7 +519,7 @@
         updatedAnime.ongoing = editAnimeOngoing.checked;
         updatedAnime.trailer = editAnimeTrailer.value.trim();
         // PATCH only the changed fields
-        const resp = await fetch(`/api/anime/${animeId}`, {
+        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ongoing: updatedAnime.ongoing, trailer: updatedAnime.trailer })
@@ -579,7 +579,7 @@
             }
         }
         // Send PATCH to backend
-        const resp = await fetch(`/api/anime/${animeId}`, {
+        const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ seasons: updatedAnime.seasons })

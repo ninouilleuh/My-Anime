@@ -17,7 +17,14 @@ const animeDataPath = path.join(__dirname, 'animeData.json');
 // Serve static files (HTML, JS, CSS, images) from project root
 app.use(express.static(__dirname));
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://ninouilleuh.github.io',
+    'http://localhost:3000', // add your local dev domain if needed
+    'http://localhost:3001'
+  ],
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 // Configure your email transport (SendGrid)
