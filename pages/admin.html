@@ -241,6 +241,14 @@
         let updatedAnime = animeDataCache.find(a => a.id === animeId);
         if (!updatedAnime || !Array.isArray(updatedAnime.seasons) || !updatedAnime.seasons[seasonIdx]) return;
         updatedAnime.seasons.splice(seasonIdx, 1);
+        // Remove any empty/ghost seasons (episodes === 0 and all video arrays missing or empty)
+        updatedAnime.seasons = updatedAnime.seasons.filter(season => {
+            if (!season) return false;
+            if (typeof season.episodes !== 'number' || season.episodes > 0) return true;
+            // If all video arrays are missing or empty, remove
+            const hasVideos = (arr) => Array.isArray(arr) && arr.some(v => v && v.trim && v.trim() !== '');
+            return hasVideos(season.videos) || hasVideos(season.videosDub) || hasVideos(season.videosFrSub) || hasVideos(season.videosFrDub);
+        });
         // Send PATCH to backend
         const resp = await fetch(`https://my-anime-l74v.onrender.com/api/anime/${animeId}`, {
             method: 'PATCH',
