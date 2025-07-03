@@ -133,6 +133,43 @@ app.get('/api/anime/:id', (req, res, next) => {
         res.json(anime);
     });
 });
+
+// PATCH /api/anime/:id - update an anime by ID
+app.patch('/api/anime/:id', (req, res, next) => {
+    // Ignore /views subroute
+    if (req.params.id === 'views') return next();
+
+    const animeId = req.params.id;
+    const updateFields = req.body;
+    fs.readFile(animeDataPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading animeData.json:', err);
+            return res.status(500).json({ error: 'Failed to read anime data.' });
+        }
+        let animeList;
+        try {
+            animeList = JSON.parse(data);
+        } catch (parseErr) {
+            console.error('Error parsing animeData.json:', parseErr);
+            return res.status(500).json({ error: 'Failed to parse anime data.' });
+        }
+        const anime = animeList.find(a => a.id === animeId);
+        if (!anime) {
+            return res.status(404).json({ error: 'Anime not found.' });
+        }
+        // Update only the provided fields
+        Object.keys(updateFields).forEach(key => {
+            anime[key] = updateFields[key];
+        });
+        fs.writeFile(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+                console.error('Error writing animeData.json:', writeErr);
+                return res.status(500).json({ error: 'Failed to update anime data.' });
+            }
+            res.json(anime);
+        });
+    });
+});
 // --- VIEW COUNTS ENDPOINTS ---
 // GET /api/anime/:id/views - get view count for an anime
 app.get('/api/anime/:id/views', (req, res) => {
