@@ -708,18 +708,7 @@
     document.getElementById('new-episode-count').addEventListener('input', function() {
         updateEpisodeLinksInputs();
     });
-
-    // Also update when switching anime/season
-    animeSelect.addEventListener('change', function() {
-        if (addEpisodeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
-            updateEpisodeLinksInputs();
-        }
-    });
-    seasonSelect.addEventListener('change', function() {
-        if (addEpisodeForm.querySelector('input[name="add-action"]:checked').value === 'episode') {
-            updateEpisodeLinksInputs();
-        }
-    });
+    // Remove old references to animeSelect/addEpisodeForm/seasonSelect (not used)
 
     document.addEventListener('DOMContentLoaded', function() {
         renderAdminAnimeTable();
