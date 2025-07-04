@@ -274,14 +274,13 @@
               if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
               return 0;
             });
-            // Only show up to 2 episodes per anime
-            const perAnime = {};
+            // Only show up to 1 episode per anime (the most recent)
+            const seenAnime = new Set();
             const lastEpisodes = [];
             for (let ep of episodes) {
-              if (!perAnime[ep.animeId]) perAnime[ep.animeId] = 0;
-              if (perAnime[ep.animeId] < 2) {
+              if (!seenAnime.has(ep.animeId)) {
                 lastEpisodes.push(ep);
-                perAnime[ep.animeId]++;
+                seenAnime.add(ep.animeId);
               }
               if (lastEpisodes.length >= 4) break;
             }
