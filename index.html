@@ -230,12 +230,25 @@
             const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime');
             if (!resp.ok) throw new Error('Failed to fetch anime list');
             let animeList = await resp.json();
-            // Collect all episodes with their anime, season, episode number, and language type
+            // Collect all episodes with their anime, season, episode number, language type, and best guess at update time
             let episodes = [];
             animeList.forEach(anime => {
               if (!anime.seasons) return;
               anime.seasons.forEach((season, sIdx) => {
                 const seasonTitle = season.title || `Season ${sIdx+1}`;
+                // Helper to get the best guess at episode update time
+                function getEpUpdatedAt(epIdx, lang) {
+                  // If season.episodesUpdatedAt exists and is an array, use it
+                  if (season.episodesUpdatedAt && Array.isArray(season.episodesUpdatedAt)) {
+                    return season.episodesUpdatedAt[epIdx] || season.updatedAt || anime.updatedAt || anime.createdAt || null;
+                  }
+                  // If season.updatedAt is an array (legacy), try that
+                  if (Array.isArray(season.updatedAt)) {
+                    return season.updatedAt[epIdx] || anime.updatedAt || anime.createdAt || null;
+                  }
+                  // Fallback: use season.updatedAt, anime.updatedAt, anime.createdAt
+                  return season.updatedAt || anime.updatedAt || anime.createdAt || null;
+                }
                 // Sub
                 if (Array.isArray(season.videos)) {
                   season.videos.forEach((url, epIdx) => {
@@ -248,7 +261,7 @@
                         episode: epIdx+1,
                         lang: 'Sub',
                         url,
-                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                        updatedAt: getEpUpdatedAt(epIdx, 'Sub')
                       });
                     }
                   });
@@ -265,7 +278,7 @@
                         episode: epIdx+1,
                         lang: 'Dub',
                         url,
-                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                        updatedAt: getEpUpdatedAt(epIdx, 'Dub')
                       });
                     }
                   });
@@ -282,7 +295,7 @@
                         episode: epIdx+1,
                         lang: 'FrSub',
                         url,
-                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                        updatedAt: getEpUpdatedAt(epIdx, 'FrSub')
                       });
                     }
                   });
@@ -299,7 +312,7 @@
                         episode: epIdx+1,
                         lang: 'FrDub',
                         url,
-                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                        updatedAt: getEpUpdatedAt(epIdx, 'FrDub')
                       });
                     }
                   });
