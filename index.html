@@ -222,7 +222,7 @@
             <!-- Last episodes will be loaded here dynamically -->
         </div>
         <script>
-        // Fetch and display last episodes added (last 4, newest first)
+        // Fetch and display the last updated episodes (up to 4, newest first)
         async function loadLastEpisodes() {
           const grid = document.getElementById('last-episodes-grid');
           grid.innerHTML = '<div style="color:#888;padding:18px;">Loading...</div>';
@@ -230,63 +230,88 @@
             const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime');
             if (!resp.ok) throw new Error('Failed to fetch anime list');
             let animeList = await resp.json();
-            // Gather all episodes with anime/season/episode context
+            // Collect all episodes with their anime, season, episode number, and language type
             let episodes = [];
             animeList.forEach(anime => {
-              if (anime.seasons && Array.isArray(anime.seasons)) {
-                anime.seasons.forEach((season, sIdx) => {
-                  const epCount = season.episodes || 0;
-                  for (let eIdx = 0; eIdx < epCount; eIdx++) {
-                    // Find the best available video link for this episode
-                    let video = '';
-                    if (season.videos && season.videos[eIdx]) video = season.videos[eIdx];
-                    else if (season.videosDub && season.videosDub[eIdx]) video = season.videosDub[eIdx];
-                    else if (season.videosFrSub && season.videosFrSub[eIdx]) video = season.videosFrSub[eIdx];
-                    else if (season.videosFrDub && season.videosFrDub[eIdx]) video = season.videosFrDub[eIdx];
-                    // Only include if there is a video link
-                    if (video && video.trim() !== '') {
-                      // Try to get a per-episode updatedAt/createdAt if available, else fallback to season/anime
-                      let epUpdatedAt = null, epCreatedAt = null;
-                      if (season.episodeMeta && Array.isArray(season.episodeMeta)) {
-                        if (season.episodeMeta[eIdx] && season.episodeMeta[eIdx].updatedAt) epUpdatedAt = season.episodeMeta[eIdx].updatedAt;
-                        if (season.episodeMeta[eIdx] && season.episodeMeta[eIdx].createdAt) epCreatedAt = season.episodeMeta[eIdx].createdAt;
-                      }
+              if (!anime.seasons) return;
+              anime.seasons.forEach((season, sIdx) => {
+                const seasonTitle = season.title || `Season ${sIdx+1}`;
+                // Sub
+                if (Array.isArray(season.videos)) {
+                  season.videos.forEach((url, epIdx) => {
+                    if (url && url.trim() !== '') {
                       episodes.push({
                         animeId: anime.id,
                         animeName: anime.name,
                         animeImg: anime.img,
-                        seasonTitle: season.title || `Season ${sIdx+1}`,
-                        seasonIdx: sIdx,
-                        episodeIdx: eIdx,
-                        episodeNum: eIdx+1,
-                        video,
-                        updatedAt: epUpdatedAt || season.updatedAt || anime.updatedAt || null,
-                        createdAt: epCreatedAt || season.createdAt || anime.createdAt || null
+                        season: seasonTitle,
+                        episode: epIdx+1,
+                        lang: 'Sub',
+                        url,
+                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
                       });
                     }
-                  }
-                });
-              }
+                  });
+                }
+                // Dub
+                if (Array.isArray(season.videosDub)) {
+                  season.videosDub.forEach((url, epIdx) => {
+                    if (url && url.trim() !== '') {
+                      episodes.push({
+                        animeId: anime.id,
+                        animeName: anime.name,
+                        animeImg: anime.img,
+                        season: seasonTitle,
+                        episode: epIdx+1,
+                        lang: 'Dub',
+                        url,
+                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                      });
+                    }
+                  });
+                }
+                // FrSub
+                if (Array.isArray(season.videosFrSub)) {
+                  season.videosFrSub.forEach((url, epIdx) => {
+                    if (url && url.trim() !== '') {
+                      episodes.push({
+                        animeId: anime.id,
+                        animeName: anime.name,
+                        animeImg: anime.img,
+                        season: seasonTitle,
+                        episode: epIdx+1,
+                        lang: 'FrSub',
+                        url,
+                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                      });
+                    }
+                  });
+                }
+                // FrDub
+                if (Array.isArray(season.videosFrDub)) {
+                  season.videosFrDub.forEach((url, epIdx) => {
+                    if (url && url.trim() !== '') {
+                      episodes.push({
+                        animeId: anime.id,
+                        animeName: anime.name,
+                        animeImg: anime.img,
+                        season: seasonTitle,
+                        episode: epIdx+1,
+                        lang: 'FrDub',
+                        url,
+                        updatedAt: season.updatedAt || anime.updatedAt || anime.createdAt || null
+                      });
+                    }
+                  });
+                }
+              });
             });
-            // Sort episodes by updatedAt/createdAt (newest first)
-            episodes.sort((a, b) => {
-              if (b.updatedAt && a.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
-              if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+            // Sort by updatedAt (newest first), fallback to order if missing
+            episodes = episodes.sort((a, b) => {
+              if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
               return 0;
             });
-            // Only show the latest updated entry per anime (the most recently updated episode for each anime)
-            const latestPerAnime = {};
-            for (let ep of episodes) {
-              if (!latestPerAnime[ep.animeId]) {
-                latestPerAnime[ep.animeId] = ep;
-              }
-            }
-            // Now, get all latest entries and sort by their update/creation time (newest first)
-            const lastEpisodes = Object.values(latestPerAnime).sort((a, b) => {
-              if (b.updatedAt && a.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
-              if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
-              return 0;
-            }).slice(0, 4);
+            const lastEpisodes = episodes.slice(0, 4);
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
@@ -295,12 +320,12 @@
             lastEpisodes.forEach(ep => {
               const card = document.createElement('a');
               card.className = 'anime-card';
-              card.href = `pages/episodes.html?id=${encodeURIComponent(ep.animeId)}&season=${ep.seasonIdx}&ep=${ep.episodeNum}`;
+              card.href = `pages/episodes.html?id=${encodeURIComponent(ep.animeId)}&season=${encodeURIComponent(ep.season)}&ep=${ep.episode}&lang=${ep.lang}`;
               card.style.textDecoration = 'none';
               card.innerHTML = `
-                <img src="${ep.animeImg}" alt="${ep.animeName} Episode ${ep.episodeNum}">
+                <img src="${ep.animeImg}" alt="${ep.animeName} - Episode ${ep.episode}">
                 <div class="info">
-                  <div class="title">${ep.animeName} - ${ep.seasonTitle} Ep. ${ep.episodeNum}</div>
+                  <div class="title">${ep.animeName} - ${ep.season} - Ep ${ep.episode} [${ep.lang}]</div>
                 </div>
               `;
               grid.appendChild(card);
