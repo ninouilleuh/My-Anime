@@ -257,11 +257,11 @@
             animeList = animeList
               .filter(a => a && a.name && a.img)
               .sort((a, b) => {
-                if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
-                if (b.updatedAt && a.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
+                if (b.createdAt && a.createdAt) return new Date(a.createdAt) - new Date(b.createdAt); // oldest to newest
+                if (b.updatedAt && a.updatedAt) return new Date(a.updatedAt) - new Date(b.updatedAt);
                 return 0;
               });
-            const recent = animeList.slice(0, 4);
+            const recent = animeList.slice(-4).reverse(); // last 4, newest first
             if (recent.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No anime found.</div>';
               return;
@@ -274,7 +274,6 @@
                 <img src="${anime.img}" alt="${anime.name}">
                 <div class="info">
                   <div class="title">${anime.name}</div>
-                  <div class="desc">${anime.desc ? anime.desc : ''}</div>
                 </div>
               `;
               grid.appendChild(card);
