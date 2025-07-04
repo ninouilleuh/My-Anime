@@ -274,16 +274,19 @@
               if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
               return 0;
             });
-            // Only show up to 1 episode per anime (the most recent)
-            const seenAnime = new Set();
-            const lastEpisodes = [];
+            // Only show the latest updated entry per anime (the most recently updated episode for each anime)
+            const latestPerAnime = {};
             for (let ep of episodes) {
-              if (!seenAnime.has(ep.animeId)) {
-                lastEpisodes.push(ep);
-                seenAnime.add(ep.animeId);
+              if (!latestPerAnime[ep.animeId]) {
+                latestPerAnime[ep.animeId] = ep;
               }
-              if (lastEpisodes.length >= 4) break;
             }
+            // Now, get all latest entries and sort by their update/creation time (newest first)
+            const lastEpisodes = Object.values(latestPerAnime).sort((a, b) => {
+              if (b.updatedAt && a.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
+              if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+              return 0;
+            }).slice(0, 4);
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
