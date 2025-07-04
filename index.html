@@ -331,12 +331,15 @@
               }
             });
             // Get all latest episodes, sort by updatedAt (newest first)
+            // Get all latest episodes, sort by updatedAt (newest first), take top 4 (newest), display left-to-right newest to oldest
+
+            // Only include episodes with a valid updatedAt timestamp
             const lastEpisodes = Object.values(latestByAnime)
-              .sort((a, b) => {
-                if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
-                return 0;
-              })
+              .filter(ep => ep.updatedAt && !isNaN(new Date(ep.updatedAt)))
+              .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
               .slice(0, 4);
+
+            // Display left-to-right: newest to oldest (no reverse)
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
