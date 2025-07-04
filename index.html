@@ -245,6 +245,12 @@
                     else if (season.videosFrDub && season.videosFrDub[eIdx]) video = season.videosFrDub[eIdx];
                     // Only include if there is a video link
                     if (video && video.trim() !== '') {
+                      // Try to get a per-episode updatedAt/createdAt if available, else fallback to season/anime
+                      let epUpdatedAt = null, epCreatedAt = null;
+                      if (season.episodeMeta && Array.isArray(season.episodeMeta)) {
+                        if (season.episodeMeta[eIdx] && season.episodeMeta[eIdx].updatedAt) epUpdatedAt = season.episodeMeta[eIdx].updatedAt;
+                        if (season.episodeMeta[eIdx] && season.episodeMeta[eIdx].createdAt) epCreatedAt = season.episodeMeta[eIdx].createdAt;
+                      }
                       episodes.push({
                         animeId: anime.id,
                         animeName: anime.name,
@@ -254,9 +260,8 @@
                         episodeIdx: eIdx,
                         episodeNum: eIdx+1,
                         video,
-                        // Use updatedAt/createdAt for sorting if available
-                        updatedAt: season.updatedAt || anime.updatedAt || null,
-                        createdAt: season.createdAt || anime.createdAt || null
+                        updatedAt: epUpdatedAt || season.updatedAt || anime.updatedAt || null,
+                        createdAt: epCreatedAt || season.createdAt || anime.createdAt || null
                       });
                     }
                   }
@@ -269,7 +274,17 @@
               if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
               return 0;
             });
-            const lastEpisodes = episodes.slice(0, 4);
+            // Only show up to 2 episodes per anime
+            const perAnime = {};
+            const lastEpisodes = [];
+            for (let ep of episodes) {
+              if (!perAnime[ep.animeId]) perAnime[ep.animeId] = 0;
+              if (perAnime[ep.animeId] < 2) {
+                lastEpisodes.push(ep);
+                perAnime[ep.animeId]++;
+              }
+              if (lastEpisodes.length >= 4) break;
+            }
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
