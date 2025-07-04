@@ -268,8 +268,10 @@
             }
             grid.innerHTML = '';
             recent.forEach(anime => {
-              const card = document.createElement('div');
+              const card = document.createElement('a');
               card.className = 'anime-card';
+              card.href = `pages/anime.html?id=${encodeURIComponent(anime.id)}`;
+              card.style.textDecoration = 'none';
               card.innerHTML = `
                 <img src="${anime.img}" alt="${anime.name}">
                 <div class="info">
