@@ -218,26 +218,82 @@
     </div>
     <div class="container">
         <h2 data-i18n="lastEpisodes">Last Episodes Added</h2>
-        <div class="anime-grid">
-            <div class="anime-card">
-                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg" alt="Frieren: Beyond Journey’s End Episode 24">
-                <div class="info">
-                    <div class="title">Frieren: Beyond Journey’s End - Episode 24</div>
-                </div>
-            </div>
-            <div class="anime-card">
-                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg" alt="Demon Slayer: Hashira Training Arc Episode 8">
-                <div class="info">
-                    <div class="title">Demon Slayer: Hashira Training Arc - Episode 8</div>
-                </div>
-            </div>
-            <div class="anime-card">
-                <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png" alt="Solo Leveling Episode 12">
-                <div class="info">
-                    <div class="title">Solo Leveling - Episode 12</div>
-                </div>
-            </div>
+        <div class="anime-grid" id="last-episodes-grid">
+            <!-- Last episodes will be loaded here dynamically -->
         </div>
+        <script>
+        // Fetch and display last episodes added (last 4, newest first)
+        async function loadLastEpisodes() {
+          const grid = document.getElementById('last-episodes-grid');
+          grid.innerHTML = '<div style="color:#888;padding:18px;">Loading...</div>';
+          try {
+            const resp = await fetch('https://my-anime-l74v.onrender.com/api/anime');
+            if (!resp.ok) throw new Error('Failed to fetch anime list');
+            let animeList = await resp.json();
+            // Gather all episodes with anime/season/episode context
+            let episodes = [];
+            animeList.forEach(anime => {
+              if (anime.seasons && Array.isArray(anime.seasons)) {
+                anime.seasons.forEach((season, sIdx) => {
+                  const epCount = season.episodes || 0;
+                  for (let eIdx = 0; eIdx < epCount; eIdx++) {
+                    // Find the best available video link for this episode
+                    let video = '';
+                    if (season.videos && season.videos[eIdx]) video = season.videos[eIdx];
+                    else if (season.videosDub && season.videosDub[eIdx]) video = season.videosDub[eIdx];
+                    else if (season.videosFrSub && season.videosFrSub[eIdx]) video = season.videosFrSub[eIdx];
+                    else if (season.videosFrDub && season.videosFrDub[eIdx]) video = season.videosFrDub[eIdx];
+                    // Only include if there is a video link
+                    if (video && video.trim() !== '') {
+                      episodes.push({
+                        animeId: anime.id,
+                        animeName: anime.name,
+                        animeImg: anime.img,
+                        seasonTitle: season.title || `Season ${sIdx+1}`,
+                        seasonIdx: sIdx,
+                        episodeIdx: eIdx,
+                        episodeNum: eIdx+1,
+                        video,
+                        // Use updatedAt/createdAt for sorting if available
+                        updatedAt: season.updatedAt || anime.updatedAt || null,
+                        createdAt: season.createdAt || anime.createdAt || null
+                      });
+                    }
+                  }
+                });
+              }
+            });
+            // Sort episodes by updatedAt/createdAt (newest first)
+            episodes.sort((a, b) => {
+              if (b.updatedAt && a.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
+              if (b.createdAt && a.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+              return 0;
+            });
+            const lastEpisodes = episodes.slice(0, 4);
+            if (lastEpisodes.length === 0) {
+              grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
+              return;
+            }
+            grid.innerHTML = '';
+            lastEpisodes.forEach(ep => {
+              const card = document.createElement('a');
+              card.className = 'anime-card';
+              card.href = `pages/episodes.html?id=${encodeURIComponent(ep.animeId)}&season=${ep.seasonIdx}&ep=${ep.episodeNum}`;
+              card.style.textDecoration = 'none';
+              card.innerHTML = `
+                <img src="${ep.animeImg}" alt="${ep.animeName} Episode ${ep.episodeNum}">
+                <div class="info">
+                  <div class="title">${ep.animeName} - ${ep.seasonTitle} Ep. ${ep.episodeNum}</div>
+                </div>
+              `;
+              grid.appendChild(card);
+            });
+          } catch (e) {
+            grid.innerHTML = '<div style="color:#e14b4b;padding:18px;">Failed to load last episodes.</div>';
+          }
+        }
+        window.addEventListener('DOMContentLoaded', loadLastEpisodes);
+        </script>
     </div>
     <div class="container">
         <h2 data-i18n="recentlyAdded">Recently Added</h2>
