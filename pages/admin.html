@@ -674,6 +674,31 @@
                 updatedAnime.seasons[seasonIdx].videosDub = links.videosDub;
                 updatedAnime.seasons[seasonIdx].videosFrSub = links.videosFrSub;
                 updatedAnime.seasons[seasonIdx].videosFrDub = links.videosFrDub;
+
+                // --- Per-episode updatedAt tracking ---
+                if (!Array.isArray(updatedAnime.seasons[seasonIdx].episodesUpdatedAt)) {
+                    updatedAnime.seasons[seasonIdx].episodesUpdatedAt = Array(newEpCount).fill(null);
+                }
+                // Mark updated episodes with current timestamp
+                const now = new Date().toISOString();
+                for (let i = 0; i < newEpCount; i++) {
+                    // If the link changed or is new, update timestamp
+                    if (
+                        links.videos[i] !== prev.videos[i] ||
+                        links.videosDub[i] !== prev.videosDub[i] ||
+                        links.videosFrSub[i] !== prev.videosFrSub[i] ||
+                        links.videosFrDub[i] !== prev.videosFrDub[i]
+                    ) {
+                        updatedAnime.seasons[seasonIdx].episodesUpdatedAt[i] = now;
+                    } else if (!updatedAnime.seasons[seasonIdx].episodesUpdatedAt[i]) {
+                        // If never set, set to now for new episodes
+                        updatedAnime.seasons[seasonIdx].episodesUpdatedAt[i] = now;
+                    }
+                }
+                // If array is too long, trim
+                if (updatedAnime.seasons[seasonIdx].episodesUpdatedAt.length > newEpCount) {
+                    updatedAnime.seasons[seasonIdx].episodesUpdatedAt.length = newEpCount;
+                }
             }
             // PATCH to backend
             let statusMsg = addEpisodeSuccess;
