@@ -8,11 +8,20 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const fs = require('fs');
-const path = require('path');
 
+// --- MongoDB Setup ---
+const { MongoClient } = require('mongodb');
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://palomaresnina3:7p06iMGSkXb2GJKE@animerashii.g7ag9dk.mongodb.net/';
+const client = new MongoClient(MONGO_URI);
+let animeCollection;
 
-const animeDataPath = path.join(__dirname, 'animeData.json');
+async function connectMongo() {
+  if (!animeCollection) {
+    await client.connect();
+    const db = client.db('animerashii'); // DB name
+    animeCollection = db.collection('anime');
+  }
+}
 
 // Serve static files (HTML, JS, CSS, images) from project root
 app.use(express.static(__dirname));
@@ -58,172 +67,67 @@ app.post('/suggest-anime', async (req, res) => {
     }
 });
 
-// GET /api/anime - fetch all anime
-app.get('/api/anime', (req, res) => {
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        try {
-            const animeList = JSON.parse(data);
-            res.json(animeList);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-    });
+// GET /api/anime - fetch all anime (MongoDB)
+app.get('/api/anime', async (req, res) => {
+  await connectMongo();
+  const animeList = await animeCollection.find({}).toArray();
+  res.json(animeList);
 });
 
-// POST /api/anime - add a new anime
-app.post('/api/anime', (req, res) => {
-    const newAnime = req.body;
-    if (!newAnime || !newAnime.id || !newAnime.name) {
-        return res.status(400).json({ error: 'Anime object with at least id and name is required.' });
-    }
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        let animeList;
-        try {
-            animeList = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            return res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-        // Prevent duplicate IDs
-        if (animeList.some(anime => anime.id === newAnime.id)) {
-            return res.status(409).json({ error: 'Anime with this ID already exists.' });
-        }
-        animeList.push(newAnime);
-        fs.writeFile(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8', (writeErr) => {
-            if (writeErr) {
-                console.error('Error writing animeData.json:', writeErr);
-                return res.status(500).json({ error: 'Failed to save anime data.' });
-            }
-            res.status(201).json(newAnime);
-        });
-    });
+// POST /api/anime - add a new anime (MongoDB)
+app.post('/api/anime', async (req, res) => {
+  await connectMongo();
+  const newAnime = req.body;
+  if (!newAnime || !newAnime.id || !newAnime.name) {
+    return res.status(400).json({ error: 'Anime object with at least id and name is required.' });
+  }
+  const exists = await animeCollection.findOne({ id: newAnime.id });
+  if (exists) return res.status(409).json({ error: 'Anime with this ID already exists.' });
+  await animeCollection.insertOne(newAnime);
+  res.status(201).json(newAnime);
 });
 
-// GET /api/anime/:id - fetch a single anime by ID
-app.get('/api/anime/:id', (req, res, next) => {
-    // Ignore /views subroute
-    if (req.params.id === 'views') return next();
-
-    const animeId = req.params.id;
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        let animeList;
-        try {
-            animeList = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            return res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-        const anime = animeList.find(a => a.id === animeId);
-        if (!anime) {
-            return res.status(404).json({ error: 'Anime not found.' });
-        }
-        res.json(anime);
-    });
+// GET /api/anime/:id - fetch a single anime by ID (MongoDB)
+app.get('/api/anime/:id', async (req, res, next) => {
+  if (req.params.id === 'views') return next();
+  await connectMongo();
+  const anime = await animeCollection.findOne({ id: req.params.id });
+  if (!anime) return res.status(404).json({ error: 'Anime not found.' });
+  res.json(anime);
 });
 
-// PATCH /api/anime/:id - update an anime by ID
-app.patch('/api/anime/:id', (req, res, next) => {
-    // Ignore /views subroute
-    if (req.params.id === 'views') return next();
-
-    const animeId = req.params.id;
-    const updateFields = req.body;
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        let animeList;
-        try {
-            animeList = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            return res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-        const anime = animeList.find(a => a.id === animeId);
-        if (!anime) {
-            return res.status(404).json({ error: 'Anime not found.' });
-        }
-        // Update only the provided fields
-        Object.keys(updateFields).forEach(key => {
-            anime[key] = updateFields[key];
-        });
-
-        // Ensure the animeList is written to disk synchronously and check for errors
-        try {
-            fs.writeFileSync(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8');
-        } catch (writeErr) {
-            console.error('Error writing animeData.json:', writeErr);
-            return res.status(500).json({ error: 'Failed to update anime data.' });
-        }
-        res.json(anime);
-    });
+// PATCH /api/anime/:id - update an anime by ID (MongoDB)
+app.patch('/api/anime/:id', async (req, res, next) => {
+  if (req.params.id === 'views') return next();
+  await connectMongo();
+  const updateFields = req.body;
+  const result = await animeCollection.findOneAndUpdate(
+    { id: req.params.id },
+    { $set: updateFields },
+    { returnDocument: 'after' }
+  );
+  if (!result.value) return res.status(404).json({ error: 'Anime not found.' });
+  res.json(result.value);
 });
-// --- VIEW COUNTS ENDPOINTS ---
+// --- VIEW COUNTS ENDPOINTS (MongoDB) ---
 // GET /api/anime/:id/views - get view count for an anime
-app.get('/api/anime/:id/views', (req, res) => {
-    const animeId = req.params.id;
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        let animeList;
-        try {
-            animeList = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            return res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-        const anime = animeList.find(a => a.id === animeId);
-        if (!anime) {
-            return res.status(404).json({ error: 'Anime not found.' });
-        }
-        res.json({ id: animeId, views: anime.views || 0 });
-    });
+app.get('/api/anime/:id/views', async (req, res) => {
+  await connectMongo();
+  const anime = await animeCollection.findOne({ id: req.params.id });
+  if (!anime) return res.status(404).json({ error: 'Anime not found.' });
+  res.json({ id: req.params.id, views: anime.views || 0 });
 });
 
 // POST /api/anime/:id/views - increment view count for an anime
-app.post('/api/anime/:id/views', (req, res) => {
-    const animeId = req.params.id;
-    fs.readFile(animeDataPath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading animeData.json:', err);
-            return res.status(500).json({ error: 'Failed to read anime data.' });
-        }
-        let animeList;
-        try {
-            animeList = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing animeData.json:', parseErr);
-            return res.status(500).json({ error: 'Failed to parse anime data.' });
-        }
-        const anime = animeList.find(a => a.id === animeId);
-        if (!anime) {
-            return res.status(404).json({ error: 'Anime not found.' });
-        }
-        anime.views = (anime.views || 0) + 1;
-        fs.writeFile(animeDataPath, JSON.stringify(animeList, null, 2), 'utf8', (writeErr) => {
-            if (writeErr) {
-                console.error('Error writing animeData.json:', writeErr);
-                return res.status(500).json({ error: 'Failed to update view count.' });
-            }
-            res.json({ id: animeId, views: anime.views });
-        });
-    });
+app.post('/api/anime/:id/views', async (req, res) => {
+  await connectMongo();
+  const result = await animeCollection.findOneAndUpdate(
+    { id: req.params.id },
+    { $inc: { views: 1 } },
+    { returnDocument: 'after' }
+  );
+  if (!result.value) return res.status(404).json({ error: 'Anime not found.' });
+  res.json({ id: req.params.id, views: result.value.views || 0 });
 });
 
 app.listen(PORT, () => {
