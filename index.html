@@ -320,21 +320,23 @@
               });
             });
             // For each anime, keep only the most recently updated episode
+            // For each anime, keep only the most recently updated episode (by episode number, then updatedAt)
             const latestByAnime = {};
             episodes.forEach(ep => {
-              if (!latestByAnime[ep.animeId] || (ep.updatedAt && new Date(ep.updatedAt) > new Date(latestByAnime[ep.animeId].updatedAt))) {
+              // If this anime is not set yet, or this episode is newer (higher episode number), or same episode but newer updatedAt
+              if (!latestByAnime[ep.animeId] ||
+                  ep.episode > latestByAnime[ep.animeId].episode ||
+                  (ep.episode === latestByAnime[ep.animeId].episode && ep.updatedAt && new Date(ep.updatedAt) > new Date(latestByAnime[ep.animeId].updatedAt))) {
                 latestByAnime[ep.animeId] = ep;
               }
             });
-            // Get all latest episodes, sort by updatedAt (oldest first), then reverse for newest first
-            // Get all latest episodes, sort by updatedAt (newest first), then reverse for display order
+            // Get all latest episodes, sort by updatedAt (newest first)
             const lastEpisodes = Object.values(latestByAnime)
               .sort((a, b) => {
-                if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt); // newest to oldest
+                if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
                 return 0;
               })
-              .slice(0, 4)
-              .reverse(); // reverse so display order is oldest to newest (left to right)
+              .slice(0, 4);
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
