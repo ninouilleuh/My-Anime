@@ -319,12 +319,20 @@
                 }
               });
             });
-            // Sort by updatedAt (newest first), fallback to order if missing
-            episodes = episodes.sort((a, b) => {
-              if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
-              return 0;
+            // For each anime, keep only the most recently updated episode
+            const latestByAnime = {};
+            episodes.forEach(ep => {
+              if (!latestByAnime[ep.animeId] || (ep.updatedAt && new Date(ep.updatedAt) > new Date(latestByAnime[ep.animeId].updatedAt))) {
+                latestByAnime[ep.animeId] = ep;
+              }
             });
-            const lastEpisodes = episodes.slice(0, 4);
+            // Get all latest episodes, sort by updatedAt (newest first)
+            const lastEpisodes = Object.values(latestByAnime)
+              .sort((a, b) => {
+                if (a.updatedAt && b.updatedAt) return new Date(b.updatedAt) - new Date(a.updatedAt);
+                return 0;
+              })
+              .slice(0, 4);
             if (lastEpisodes.length === 0) {
               grid.innerHTML = '<div style="color:#888;padding:18px;">No episodes found.</div>';
               return;
